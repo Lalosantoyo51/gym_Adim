@@ -174,7 +174,15 @@ class _UsuariosState extends State<Usuarios> {
                                 color: Colors.red,
                                 size: 30,
                               )):   IconButton(
-                              onPressed: () => rutina.asignarUsuario(widget.id_rutina,users[index].idU,users[index].tipo_user),
+                            onPressed: () => rutina.existe_el_ususrio(context,users[index].idU, widget.id_rutina,users[index].tipo_user),
+                              /*onPressed: () => rutina.asignarUsuario(widget.id_rutina,users[index].idU,users[index].tipo_user).then((value){
+                                print('el value sss $value');
+                                              if(value =="succes"){
+                                  rutina.succes2(context);
+                                }else{
+                                  rutina.advertencia2(context);
+                                }
+                              }),*/
                               icon: const Icon(
                                 Icons.add_circle_outline,
                                 color: Colors.green,

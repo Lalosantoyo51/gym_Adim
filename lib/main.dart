@@ -1,6 +1,7 @@
 import 'package:administrador/screens/Autentificacion/Screen/login.dart';
 import 'package:administrador/screens/gym/providers/provider_categorias.dart';
 import 'package:administrador/screens/gym/providers/provider_ejercicios.dart';
+import 'package:administrador/screens/gym/providers/reproductor_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => provider_rutina(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => provider_reproductor(),
         ),
       ],
       child: GetMaterialApp(

@@ -100,7 +100,7 @@ class Rutina_Apis{
     return ejercicio_rutinas;
   }
 
-  Future<Rutina_Ejercicio_Model?> asignatRutina(Rutina_Ejercicio_Model rutina)async{
+  Future<String?> asignatRutina(Rutina_Ejercicio_Model rutina)async{
 
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
@@ -114,7 +114,11 @@ class Rutina_Apis{
       response = await dio.post('${uriP}rutina.php?op=asignar_rutina',data: rutina.toJson(),options: options2);
       print('el response ${response.data}');
       //return Rutina_Ejercicio_Model.fromJson(json.decode(response.data)[0]);
-
+      if(response.data == "El usuario ya se encuentra registrado en esta rutina"){
+        return "fallo";
+      }else{
+        return "succes";
+      }
     } on DioError catch (e) {
       print('el error ${e.error}');
     }
@@ -238,6 +242,28 @@ class Rutina_Apis{
     } on DioError catch (e) {
       print('el error ${e.error}');
     }
+  }
+  Future existe_el_ususrio(int asignado_a, int id_rutina)async{
+    var datos = {
+      "asignado_a": asignado_a,
+      "id_rutina":id_rutina
+    };
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    Response response;
+    try {
+      print('${uriP}rutina.php?op=existe_el_ususrio');
+      response = await dio.post('${uriP}rutina.php?op=existe_el_ususrio',data: datos,options: options2);
+      print('el response ${response.data}');
+      return response.data;
+    } on DioError catch (e) {
+      print('el error ${e.error}');
+    }
+
   }
 
 

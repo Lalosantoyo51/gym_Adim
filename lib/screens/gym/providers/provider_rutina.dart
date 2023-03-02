@@ -23,6 +23,7 @@ class provider_rutina with ChangeNotifier {
   TextEditingController repeticiones = TextEditingController();
   TextEditingController nivel = TextEditingController();
   int rating = 0;
+  String la = "";
 
   getRutina() async {
     await getUser();
@@ -76,6 +77,26 @@ class provider_rutina with ChangeNotifier {
           onPressed: () {
             Navigator.pop(context);
             Navigator.of(context).pop();
+          },
+          width: 120,
+        ),
+      ],
+    ).show();
+  }
+  succes2(context) {
+    Alert(
+      context: context,
+      type: AlertType.success,
+      title: "Correto",
+      desc: "Se a agregado correctamente",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Aceptar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
           },
           width: 120,
         ),
@@ -180,6 +201,27 @@ class provider_rutina with ChangeNotifier {
       ],
     ).show();
   }
+  advertencia2(context) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Advertencia",
+      desc: "Este usuario ya esta asignado a esta rutina",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Aceptar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          width: 120,
+        ),
+
+      ],
+    ).show();
+  }
   agregarRutina(context) {
     getUser();
     Alert(
@@ -225,12 +267,25 @@ class provider_rutina with ChangeNotifier {
   Future <List<UserModel>> obtener_usuarios_rutina(id_rutina){
    return api_rutina.get_usurios_rutina(id_rutina);
   }
+  Future existe_el_ususrio(context,asignado_a,id_rutina,tipo_usuario)async{
+    api_rutina.existe_el_ususrio(asignado_a, id_rutina).then((value) {
+      if(value == "succes"){
+        asignarUsuario(id_rutina, asignado_a, tipo_usuario).then((value) => succes2(context));
+      }else{
+        advertencia2(context);
+      }
+    });
+    notifyListeners();
+  }
+
   Future asignarUsuario(id_rutina,id_usuario, tipo_usuario)async{
     print('Asignar user');
     await getEjerciciosRutina(id_rutina);
-    ejercicios_rutina.forEach((element) {
+    int cont = 0;
+    ejercicios_rutina.forEach((element) async{
+      cont ++;
       print('aaa ${element.nombre}');
-      api_rutina.asignatRutina(Rutina_Ejercicio_Model(
+      await api_rutina.asignatRutina(Rutina_Ejercicio_Model(
         series: element.series,
         repeticiones: element.repeticiones,
         nivel: element.nivel,
