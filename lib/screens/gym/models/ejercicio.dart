@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
+
 class Ejercicio_Model {
   late int? id_ejercicio;
+  late int? id_ent;
   late int? id_cat_eje;
   late int? fileid;
   late int? disponible;
@@ -10,9 +13,11 @@ class Ejercicio_Model {
   late String? instrucciones;
   bool isActivo;
 
+
   Ejercicio_Model(
       {this.isActivo = true,
       this.id_ejercicio,
+      this.id_ent,
       this.id_cat_eje,
       this.nombre,
       this.calificacion,
@@ -37,6 +42,7 @@ class Ejercicio_Model {
         isActivo = int.parse(json["disponible"]) == 1 ? true : false;
 
   Map toJson() => {
+        "id_ent": id_ent,
         "id_ejercicio": id_ejercicio,
         "id_cat_eje": id_cat_eje,
         "fileid": fileid,

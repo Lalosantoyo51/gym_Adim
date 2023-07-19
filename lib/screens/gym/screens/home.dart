@@ -3,6 +3,8 @@ import 'package:administrador/screens/gym/providers/provider_categorias.dart';
 import 'package:administrador/screens/gym/providers/provider_ejercicios.dart';
 import 'package:administrador/screens/gym/providers/provider_rutina.dart';
 import 'package:administrador/screens/gym/screens/categoria_ejercicio.dart';
+import 'package:administrador/screens/gym/screens/create_entrenamiento.dart';
+import 'package:administrador/screens/gym/screens/entrenamientos.dart';
 import 'package:administrador/screens/gym/screens/rutina.dart';
 import 'package:administrador/screens/gym/screens/usuarios.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +106,18 @@ class HomeAdmin extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
+                options(width,"Entrenamiento",() {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider<provider_rutina>(create: (_) => provider_rutina()),
+                          ],
+                          builder: (context, child) => Entrenamiento(),
+                        ),)
+                  );
 
+                }),
               ],
             ),
           );

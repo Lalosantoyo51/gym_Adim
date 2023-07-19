@@ -5,6 +5,7 @@ import 'package:administrador/enviroments.dart';
 import 'package:administrador/screens/Autentificacion/Model/user_model.dart';
 import 'package:administrador/screens/gym/models/rutina_ejercicio_model.dart';
 import 'package:administrador/screens/gym/models/rutina_model.dart';
+import 'package:administrador/screens/gym/models/serie.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 
@@ -74,11 +75,11 @@ class Rutina_Apis{
     return Rutina_Model();
   }
 
-  Future<List<Rutina_Ejercicio_Model>> get_ejercicio_rutina(id_rutina)async{
+  Future<List<SerieModel>> get_ejercicio_rutina(id_rutina)async{
     var datos = {
       "id_rutina": id_rutina
     };
-    List<Rutina_Ejercicio_Model> ejercicio_rutinas = [];
+    List<SerieModel> series = [];
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.badCertificateCallback =
@@ -89,15 +90,32 @@ class Rutina_Apis{
     try {
       print('${uriP}rutina.php?op=get_ejercicios_rutinas');
       response = await dio.post('${uriP}rutina.php?op=get_ejercicios_rutinas',data: datos,options: options2);
-      print('el response ${response.data}');
-      ejercicio_rutinas = (json.decode(response.data) as List)
-          .map((data) => Rutina_Ejercicio_Model.fromJson2(data))
+      series = (json.decode(response.data) as List)
+          .map((data) => SerieModel.fromJson(data))
           .toList();
-      return ejercicio_rutinas;
+      return series;
     } on DioError catch (e) {
       print('el error ${e.error}');
     }
-    return ejercicio_rutinas;
+    return series;
+  }
+  Future <SerieModel?> insetar_serie(SerieModel serie)async{
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    Response response;
+    try {
+      print('${uriP}rutina.php?op=insertar_serie');
+      response = await dio.post('${uriP}rutina.php?op=insertar_serie',data: serie.toJson(),options: options2);
+      print('el response ${response.data}');
+      return SerieModel.fromJson2(json.decode(response.data)[0]);
+    } on DioError catch (e) {
+      print('el error ${e.error}');
+    }
+
   }
 
   Future<String?> asignatRutina(Rutina_Ejercicio_Model rutina)async{

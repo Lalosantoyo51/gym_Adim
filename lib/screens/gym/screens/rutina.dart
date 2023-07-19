@@ -28,6 +28,7 @@ class _RutinaState extends State<Rutina> {
     // TODO: implement initState
     final rutina = Provider.of<provider_rutina>(context, listen: false);
     rutina.getRutina();
+    print('aaaa');
     setState(() {});
   }
 
@@ -102,25 +103,25 @@ class _RutinaState extends State<Rutina> {
                             onPressed: () {Get.to(Ejercicio_Rutina(id_rutina: rutina.rutinas[index].id_rutina!,));
                             },
                             icon: const Icon(
-                              Icons.list,
+                              Icons.remove_red_eye,
                               color: Colors.orange,
                               size: 25,
                             )),
                         IconButton(
                             onPressed: () {
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) => MultiProvider(
-                                      providers: [
-                                        ChangeNotifierProvider<provider_cat_eje>(create: (_) => provider_cat_eje()),
-                                        ChangeNotifierProvider<provider_ejercicios>(create: (_) => provider_ejercicios()),
-                                      ],
-                                      builder: (context, child) => Categoria_ejercicio(proviene: "rutina",id_rutina: rutina.rutinas[index].id_rutina),
-                                    ),)
-                              );
+                             //Navigator.of(context).push(
+                             //    MaterialPageRoute(
+                             //      builder: (BuildContext context) => MultiProvider(
+                             //        providers: [
+                             //          ChangeNotifierProvider<provider_cat_eje>(create: (_) => provider_cat_eje()),
+                             //          ChangeNotifierProvider<provider_ejercicios>(create: (_) => provider_ejercicios()),
+                             //        ],
+                             //        builder: (context, child) => Categoria_ejercicio(proviene: "rutina",id_rutina: rutina.rutinas[index].id_rutina),
+                             //      )));
+                              rutina.agregarSerie(context,rutina.rutinas[index].id_rutina);
                             },
                             icon: const Icon(
-                              Icons.remove_red_eye,
+                              Icons.add_circle,
                               color: Colors.green,
                               size: 25,
                             )),

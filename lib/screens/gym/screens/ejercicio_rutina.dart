@@ -5,6 +5,7 @@ import 'package:administrador/screens/gym/providers/provider_ejercicios.dart';
 import 'package:administrador/screens/gym/providers/provider_rutina.dart';
 import 'package:administrador/screens/gym/screens/reproductor.dart';
 import 'package:administrador/widgets/bottom_gradiant.dart';
+import 'package:administrador/widgets/colum_builder.dart';
 import 'package:administrador/widgets/input.dart';
 import 'package:administrador/widgets/loading.dart';
 import 'package:administrador/widgets/nivel.dart';
@@ -15,22 +16,19 @@ import 'package:video_player/video_player.dart';
 
 class Ejercicio_Rutina extends StatefulWidget {
   int id_rutina;
-  Ejercicio_Rutina({Key? key,required this.id_rutina})
-      : super(key: key);
+  Ejercicio_Rutina({Key? key, required this.id_rutina}) : super(key: key);
 
   @override
   State<Ejercicio_Rutina> createState() => _Ejercicio_RutinaState();
 }
 
 class _Ejercicio_RutinaState extends State<Ejercicio_Rutina> {
-
   @override
   void initState() {
     // TODO: implement initState
     geteje();
     super.initState();
   }
-
 
   geteje() {
     // TODO: implement initState
@@ -45,57 +43,62 @@ class _Ejercicio_RutinaState extends State<Ejercicio_Rutina> {
     double height = MediaQuery.of(context).size.height;
     final rutina = Provider.of<provider_rutina>(context);
     return Container(
-      height: height,
-      width: width,
-      child: Scaffold(
-          appBar: AppBar(
-              backgroundColor: Colors.black,
-              title: Text("Ejercicios ${rutina
-                  .ejercicios_rutina.length}"),
-              centerTitle: true),
-          body: rutina
-              .ejercicios_rutina.isNotEmpty ?ListView.builder(
-            itemCount:rutina
-                .ejercicios_rutina.length ,
-            itemBuilder: (context, index) => Card(child: buildPadding(width, index, context, height,rutina))):const Center(child: Text("No hay registros",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),)));
+        height: height,
+        width: width,
+        child: Scaffold(
+            appBar: AppBar(
+                backgroundColor: Colors.black,
+                title: Text("Ejercicios"),
+                centerTitle: true),
+            body: rutina.listSeries.isNotEmpty
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: rutina.listSeries.length,
+                    itemBuilder: (context, index) => Column(
+                      children: [
+                        Text(rutina.listSeries[index].serie!),
+                        ColumnBuilder(
+                              itemCount:
+                                  rutina.listSeries[index].ejercicios!.length,
+                              itemBuilder: (context, index2) => Card(
+                                  child: buildPadding(width, index, index2, context,
+                                      height, rutina,rutina.listSeries[index].serie!)),
+                            ),
+                      ],
+                    ))
+                : const Center(
+                    child: Text("No hay registros",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 25)),
+                  )));
   }
- 
-  Padding buildPadding(double width,  int index, BuildContext context, double height,provider_rutina rutina) {
+
+  Padding buildPadding(double width, int index, int index2,
+      BuildContext context, double height, provider_rutina rutina,serie) {
     return Padding(
-          padding:
-          const EdgeInsets.only(top: 5,bottom: 5 ),
-          child: Column(
-            crossAxisAlignment:
-            CrossAxisAlignment.start,
+      padding: const EdgeInsets.only(top: 5, bottom: 5),
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Column(
-                    crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        rutina.
-                        ejercicios_rutina[
-                        index]
-                            .nombre!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5,
+                        rutina.listSeries[index].ejercicios![index2].nombre!,
+                        style: Theme.of(context).textTheme.headline5,
                         maxLines: 1,
-                        overflow:
-                        TextOverflow.ellipsis,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        "Series ${rutina
-                            .ejercicios_rutina[
-                        index].series}",
+                        "Series ${rutina.listSeries[index].ejercicios![index2].series}",
                       ),
                       Text(
-                        "Repeticiones ${rutina
-                            .ejercicios_rutina[
-                        index].repeticiones}",
+                        "Repeticiones ${rutina.listSeries[index].ejercicios![index2].repeticiones}",
                       ),
                       SizedBox(
                         height: 5,
@@ -105,12 +108,15 @@ class _Ejercicio_RutinaState extends State<Ejercicio_Rutina> {
                           Text(
                             "Nivel",
                           ),
-                          SizedBox(width: 25,),
+                          SizedBox(
+                            width: 25,
+                          ),
                           Nivel(
-                            initialRating:
-                            double.parse(rutina
-                                .ejercicios_rutina[
-                            index].nivel.toString()),
+                            onChanged: (value) {},
+                            isEnabled: false,
+                            initialRating: rutina
+                                .listSeries[index].ejercicios![index2].nivel!
+                                .toDouble(),
                             size: width * .05,
                           ),
                         ],
@@ -125,9 +131,9 @@ class _Ejercicio_RutinaState extends State<Ejercicio_Rutina> {
                         children: [
                           IconButton(
                               onPressed: () {
-                                Get.to(Reproductor(fieldid: rutina
-                                    .ejercicios_rutina[
-                                index].fileid!));
+                                Get.to(Reproductor(
+                                    fieldid: rutina.listSeries[index]
+                                        .ejercicios![index2].fileid!));
                               },
                               icon: const Icon(
                                 Icons.video_library_rounded,
@@ -136,11 +142,13 @@ class _Ejercicio_RutinaState extends State<Ejercicio_Rutina> {
                               )),
                           IconButton(
                               onPressed: () {
-                                rutina.eliminar_ejercicio_rutina(rutina
-                                    .ejercicios_rutina[
-                                index].id_rutina, rutina
-                                    .ejercicios_rutina[
-                                index].id_ejercicio).then((value) => geteje());
+                                rutina
+                                    .eliminar_ejercicio_rutina(
+                                        rutina.listSeries[index].ejercicios![index2]
+                                            .id_rutina,
+                                        rutina
+                                            .ejercicios_rutina[index].id_ejercicio)
+                                    .then((value) => geteje());
                               },
                               icon: const Icon(
                                 Icons.cancel,
@@ -155,6 +163,12 @@ class _Ejercicio_RutinaState extends State<Ejercicio_Rutina> {
               )
             ],
           ),
-        );
+          Container(
+            width: 10,
+            height: height/10,
+            color:serie == "Biserie"? Colors.red:serie == "Triserie"?Colors.blue:Colors.green,)
+        ],
+      ),
+    );
   }
 }

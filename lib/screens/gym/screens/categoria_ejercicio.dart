@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:administrador/screens/gym/models/categoria_eje.dart';
 import 'package:administrador/screens/gym/providers/provider_categorias.dart';
 import 'package:administrador/screens/gym/providers/provider_ejercicios.dart';
+import 'package:administrador/screens/gym/providers/provider_rutina.dart';
 import 'package:administrador/screens/gym/screens/ejercicio.dart';
+import 'package:administrador/screens/gym/screens/serie_ejercicios.dart';
 import 'package:flutter/material.dart';
 import 'package:administrador/widgets/input.dart';
 import 'package:administrador/widgets/bottom_gradiant.dart';
@@ -42,6 +44,7 @@ class _Categoria_ejercicioState extends State<Categoria_ejercicio> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final cat_eje_provider = Provider.of<provider_cat_eje>(context);
+    final rutina = Provider.of<provider_rutina>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -69,22 +72,56 @@ class _Categoria_ejercicioState extends State<Categoria_ejercicio> {
       body: Container(
         width: width,
         height: height,
-        child: cat_eje_provider.categorias.isNotEmpty && cat_eje_provider.isAgregar == false  && cat_eje_provider.iseditar == false
-            ? ListView.builder(
-                itemCount: cat_eje_provider.categorias.length,
-                itemBuilder: (context, index) =>
-                    cardCategoria(height, width, cat_eje_provider.categorias[index],cat_eje_provider),
-              )
-            : cat_eje_provider.categorias.isEmpty && cat_eje_provider.isAgregar == false && cat_eje_provider.iseditar == false
+        child: Stack(
+          children: [
+            cat_eje_provider.categorias.isNotEmpty && cat_eje_provider.isAgregar == false  && cat_eje_provider.iseditar == false
+                ? ListView.builder(
+              itemCount: cat_eje_provider.categorias.length,
+              itemBuilder: (context, index) =>
+                  cardCategoria(height, width, cat_eje_provider.categorias[index],cat_eje_provider),
+            )
+                : cat_eje_provider.categorias.isEmpty && cat_eje_provider.isAgregar == false && cat_eje_provider.iseditar == false
                 ? Container(
-                    child: const Center(
-                        child: Text(
-                      "No hay registros",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                    )),
-                  )
+              child: const Center(
+                  child: Text(
+                    "No hay registros",
+                    style:
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                  )),
+            )
                 : form(height, width, context,cat_eje_provider),
+            if(widget.proviene == "rutina")
+              Positioned(
+                bottom: 10,
+                left: 50,
+                right: 50,
+                child: InkWell(
+                  onTap: (){
+                    Get.to(Serie_Ejercicios(id_rutina: widget.id_rutina!,));
+                  },
+                  child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      child: BottomGradiant(
+                        colorFinal:  Colors.black,
+                        colorInicial: Colors.black,
+                        width: width * .8,
+                        heigth: height * .065,
+                      ),
+                    ),
+                    Text(
+                      "Ejercicios ${rutina.ejercicios.length}",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5!
+                          .copyWith(color: Colors.white),
+                    ),
+                  ],
+              ),
+                ),)
+          ],
+        )
       ),
     );
   }

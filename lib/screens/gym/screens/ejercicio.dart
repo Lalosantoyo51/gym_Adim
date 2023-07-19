@@ -4,18 +4,24 @@ import 'package:administrador/screens/gym/models/ejercicio.dart';
 import 'package:administrador/screens/gym/models/rutina_ejercicio_model.dart';
 import 'package:administrador/screens/gym/providers/provider_ejercicios.dart';
 import 'package:administrador/screens/gym/providers/provider_rutina.dart';
+import 'package:administrador/screens/gym/screens/serie_ejercicios.dart';
 import 'package:administrador/widgets/bottom_gradiant.dart';
 import 'package:administrador/widgets/input.dart';
 import 'package:administrador/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:get/get.dart';
 
 class Ejercicio extends StatefulWidget {
   Categoria_eje categoria_eje;
   String proviene;
   int? id_rutina;
-  Ejercicio({Key? key, required this.categoria_eje, required this.proviene,this.id_rutina})
+  Ejercicio(
+      {Key? key,
+      required this.categoria_eje,
+      required this.proviene,
+      this.id_rutina})
       : super(key: key);
 
   @override
@@ -42,6 +48,7 @@ class _EjercicioState extends State<Ejercicio> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final eje_provider = Provider.of<provider_ejercicios>(context);
+    final rituna = Provider.of<provider_rutina>(context);
 
     return Container(
       height: height,
@@ -102,7 +109,37 @@ class _EjercicioState extends State<Ejercicio> {
                           )),
                         )
                       : form(height, width, context, eje_provider),
-              if (eje_provider.loading == true) LoadingAlert("Cargando...")
+              if (eje_provider.loading == true) LoadingAlert("Cargando...") ,
+              if(widget.proviene == "rutina")
+                Positioned(
+                  bottom: 10,
+                  left: 50,
+                  right: 50,
+                  child: InkWell(
+                    onTap: (){
+                      Get.to(Serie_Ejercicios(id_rutina: widget.id_rutina!));
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Positioned(
+                          child: BottomGradiant(
+                            colorFinal:  Colors.black,
+                            colorInicial: Colors.black,
+                            width: width * .8,
+                            heigth: height * .065,
+                          ),
+                        ),
+                        Text(
+                          "Ejercicios ${rituna.ejercicios.length}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5!
+                              .copyWith(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),)
             ],
           )),
     );
@@ -329,39 +366,49 @@ class _EjercicioState extends State<Ejercicio> {
                       ),
                     ],
                   )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text("Agregar a la rutina"),
-                        IconButton(
-                            onPressed: () {
-                              rutina.obtener_usuarios_rutina(widget.id_rutina).then((List<UserModel> users) {
-                                setState(() {
-                                  rutina.agregarEjercicio(context,widget.id_rutina!, eje.id_ejercicio!);
-                                  for(var user in users){
-                                    rutina.agregarEjercicio(context,widget.id_rutina!, eje.id_ejercicio!);
-                                    rutina.api_rutina.asignatRutina(Rutina_Ejercicio_Model(
-                                        id_rutina: widget.id_rutina!,
-                                        id_ejercicio: eje.id_ejercicio,
-                                        asignado_a: user.idU,
-                                        nivel: rutina.rating,
-                                        repeticiones: int.parse(rutina.repeticiones.text),
-                                        series: int.parse(rutina.series.text))).then((value){
-                                    });
-                                  }
-                                });
-                              });
-                            },
-                            icon: Icon(
-                              Icons.add,
-                              size: 35,
-                              color: Colors.green,
-                            ))
-                      ],
-                    ),
-                  ),
+                : rutina.selectedValue == "Serie recta" &&
+                            rutina.ejercicios.length < 1 ||
+                        rutina.selectedValue == "Biserie" &&
+                            rutina.ejercicios.length < 2 ||
+                        rutina.selectedValue == "Triserie" &&
+                            rutina.ejercicios.length < 3 ||
+                        rutina.selectedValue == "Circuito" ||
+                        rutina.selectedValue == "Super Series"
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text("Agregar a la rutina"),
+                            IconButton(
+                                onPressed: () {
+                                  rutina.addEjercicio(eje,widget.id_rutina);
+                                  //rutina.obtener_usuarios_rutina(widget.id_rutina).then((List<UserModel> users) {
+                                  //  setState(() {
+                                  //    rutina.agregarEjercicio(context,widget.id_rutina!, eje.id_ejercicio!);
+                                  //    for(var user in users){
+                                  //      rutina.agregarEjercicio(context,widget.id_rutina!, eje.id_ejercicio!);
+                                  //      rutina.api_rutina.asignatRutina(Rutina_Ejercicio_Model(
+                                  //          id_rutina: widget.id_rutina!,
+                                  //          id_ejercicio: eje.id_ejercicio,
+                                  //          asignado_a: user.idU,
+                                  //          nivel: rutina.rating,
+                                  //          repeticiones: int.parse(rutina.repeticiones.text),
+                                  //          series: int.parse(rutina.series.text))).then((value){
+                                  //      });
+                                  //    }
+                                  //  });
+                                  //});
+                                },
+                                icon: Icon(
+                                  Icons.add,
+                                  size: 35,
+                                  color: Colors.green,
+                                ))
+                          ],
+                        ),
+                      )
+                    : Container(),
           ],
         ))));
   }

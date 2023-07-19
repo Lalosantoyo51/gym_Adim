@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 // ignore: must_be_immutable
 class Nivel extends StatelessWidget {
   //final VoidCallback? onTap;
+  final ValueChanged<double>? onChanged;
   final double initialRating;
   final double size;
   late double rating;
@@ -14,6 +15,7 @@ class Nivel extends StatelessWidget {
     super.key,
     required this.initialRating,
     required this.size,
+    this.onChanged,
     // this.onTap,
     this.isEnabled = true,
   });
@@ -56,9 +58,7 @@ class Nivel extends StatelessWidget {
         }
         return Container();
       },
-      onRatingUpdate: (rating) {
-        rutinasProvider.rating = int.parse(rating.toString().substring(0,1));
-      },
+      onRatingUpdate: onChanged!,
     );
   }
 }
