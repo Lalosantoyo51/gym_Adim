@@ -65,21 +65,26 @@ class ControladorAuth {
       print('${uriP}usuario.php?op=login');
       response = await dio.post('${uriP}usuario.php?op=login',
           data: datos, options: options2);
-      user = UserModel.fromJson(json.decode(response.data)[0]);
-      if (user.tipo_user != 1) {
-        sp.setString("usuario",json.encode(user.toJson()));
-        succes(context, user);
+      if(response.data == "Las credenciales no coinciden"){
+        error(context);
+      }else{
+        user = UserModel.fromJson(json.decode(response.data)[0]);
+        print('user ${user.enable}');
+        if (user.tipo_user != 1 && user.enable == 1) {
+          sp.setString("usuario",json.encode(user.toJson()));
+          succes(context, user);
+        }else{
+          noFacultado(context);
+          sp.clear();
+        }
       }
-      print('el response ${response.data}');
     } on DioError catch (e) {
       print('el error ${e.error}');
     }
   }
 
   succes(context, UserModel user)async {
-
     await getUser();
-
     await Alert(
       context: context,
       type: AlertType.success,
@@ -92,10 +97,52 @@ class ControladorAuth {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () {
-            if (user.tipo_user == 2) {
+            if (user.tipo_user != 1) {
               gets.Get.offAll(HomeAdmin(user: user,));
-
             }
+          },
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+
+  error(context)async {
+    await getUser();
+    await Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Adevertencia",
+      desc: "Las credenciales no coinciden con nuestros registros.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Aceptar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+  noFacultado(context)async {
+    await getUser();
+    await Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Advertencia",
+      desc: "Este usuario no esta facultado para usar esta aplicacion",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Aceptar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
           },
           width: 120,
         )

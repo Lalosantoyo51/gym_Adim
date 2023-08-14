@@ -31,6 +31,7 @@ class _Ejercicio_RutinaState extends State<Ejercicio_Rutina> {
   }
 
   geteje() {
+    print('aaaa');
     // TODO: implement initState
     final ejercicio = Provider.of<provider_rutina>(context, listen: false);
     ejercicio.getEjerciciosRutina(widget.id_rutina);

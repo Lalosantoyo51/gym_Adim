@@ -47,6 +47,7 @@ dependencies:
   platform_date_picker: ^0.0.4+1
   shared_preferences: ^2.0.17
   flutter_rating_bar: ^4.0.1
+  numberpicker: ^2.1.2
 
   flutter_localizations:
     sdk: flutter

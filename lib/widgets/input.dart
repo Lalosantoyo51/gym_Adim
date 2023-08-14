@@ -9,6 +9,7 @@ class Input extends StatefulWidget {
   final bool isBlack;
   final bool estado;
   final bool editable;
+  final bool obscureText;
   const Input({
     super.key,
     required this.inputController,
@@ -19,6 +20,7 @@ class Input extends StatefulWidget {
     this.isEmpty = false,
     this.isBlack = true,
     this.editable = true,
+    this.obscureText = false,
   });
 
   @override
@@ -53,6 +55,7 @@ class _Input extends State<Input> {
             ],
           ),
           child: TextField(
+            obscureText: widget.obscureText,
             enabled: widget.editable,
             controller: widget.inputController,
             onChanged: (value) {

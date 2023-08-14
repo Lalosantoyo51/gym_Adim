@@ -10,6 +10,7 @@ import 'package:administrador/widgets/input3.dart';
 import 'package:administrador/widgets/nivel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 
 class Create_Entrenamiento extends StatefulWidget {
@@ -21,8 +22,16 @@ class Create_Entrenamiento extends StatefulWidget {
 
 class _EntrenamientoState extends State<Create_Entrenamiento> {
   String selectedValue = "0";
+  int _currentValueDescanzo = 3;
+  int _currentValueCardio= 3;
+  String selectMinSecDescanzo = "Min";
+  String selectMinSecCardio = "Min";
   List<DropdownMenuItem<String>> dropdownItems = [
-    DropdownMenuItem(child: Text("Selecciona una rutina"), value: "0")
+    const DropdownMenuItem(value: "0", child: Text("Selecciona una rutina"))
+  ];
+List<DropdownMenuItem<String>> minSec = [
+    const DropdownMenuItem(value: "Min", child: Text("Min")),
+    const DropdownMenuItem(value: "Sec", child: Text("Sec"))
   ];
 
   @override
@@ -82,8 +91,31 @@ class _EntrenamientoState extends State<Create_Entrenamiento> {
                             const Text("Datos Generales",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
                             const SizedBox(height: 20),
                             const Text("Descanzo entre series",style: TextStyle(fontSize: 25),),
-                            Input(inputController: ent.descanso, texto: "Descanso"),
 
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                NumberPicker(
+                                  value: _currentValueDescanzo,
+                                  minValue: 1,
+                                  maxValue: 60,
+                                  onChanged: (value){
+                                    _currentValueDescanzo = value;
+                                    setState(() {});
+                                    ent.descanso.text = "$value $selectMinSecDescanzo";
+                                  },
+                                ),
+                                DropdownButton(
+                                  value: selectMinSecDescanzo,
+                                  items: minSec,
+                                  onChanged: (Object? value) {
+                                    selectMinSecDescanzo = "$value";
+                                    ent.descanso.text = "$_currentValueDescanzo $value";
+                                    setState(() {});
+                                  },
+                                )
+                              ],
+                            ),
                             const SizedBox(height: 20),
                             const Text("Intensidad",style: TextStyle(fontSize: 25)),
                             Nivel(
@@ -98,8 +130,30 @@ class _EntrenamientoState extends State<Create_Entrenamiento> {
                                 }),
                             const SizedBox(height: 20),
                             const Text("Ejercicio Cardio Vascular",style: TextStyle(fontSize: 25),),
-                            const SizedBox(height: 10),
-                            Input(inputController: ent.ejercicio_cardio_vascular, texto: "Ejercicio cardio vascular"),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                NumberPicker(
+                                  value: _currentValueCardio,
+                                  minValue: 1,
+                                  maxValue: 60,
+                                  onChanged: (value){
+                                    _currentValueCardio = value;
+                                    setState(() {});
+                                    ent.ejercicio_cardio_vascular.text = "$value $selectMinSecCardio";
+                                  },
+                                ),
+                                DropdownButton(
+                                  value: selectMinSecCardio,
+                                  items: minSec,
+                                  onChanged: (Object? value) {
+                                    selectMinSecCardio = "$value";
+                                    ent.ejercicio_cardio_vascular.text = "$_currentValueCardio $value";
+                                    setState(() {});
+                                  },
+                                )
+                              ],
+                            ),
                             const SizedBox(height: 20),
                             const Text("Repeticiones en reserva",style: TextStyle(fontSize: 25),),
                             Input(inputController: ent.repeticiones_en_reserva, texto: "Repeticiones en reserva"),
@@ -123,9 +177,9 @@ class _EntrenamientoState extends State<Create_Entrenamiento> {
                           }),
                         ent.step <3?
                         boton(height, width, context, "Siguiente", () {
-                          ent.next();
+                          ent.next(context);
                         }):boton(height, width, context, "Finalizar", () {
-                            ent.insertarEntrenamiento();
+                            ent.insertarEntrenamiento(context);
                         }),
                       ],
                     ),
@@ -171,7 +225,6 @@ class _EntrenamientoState extends State<Create_Entrenamiento> {
                                                 ent.dias[i].series![index].serie!,ent,i);
                                           },
                                           itemCount: ent.dias[i].series![index].ejercicios!.length),
-
                                     ],
                                   ),
                                 )),

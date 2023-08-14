@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import 'home.dart';
+
 class Rutina extends StatefulWidget {
   const Rutina({Key? key}) : super(key: key);
 
@@ -43,6 +45,9 @@ class _RutinaState extends State<Rutina> {
       height: height,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(onPressed: (){
+            Get.offAll(HomeAdmin(user: rutina.user!,));
+          }, icon: Icon(Icons.arrow_back)),
             title: Text("Rutinas"),
             backgroundColor: Colors.black,
             centerTitle: true),
@@ -109,15 +114,6 @@ class _RutinaState extends State<Rutina> {
                             )),
                         IconButton(
                             onPressed: () {
-                             //Navigator.of(context).push(
-                             //    MaterialPageRoute(
-                             //      builder: (BuildContext context) => MultiProvider(
-                             //        providers: [
-                             //          ChangeNotifierProvider<provider_cat_eje>(create: (_) => provider_cat_eje()),
-                             //          ChangeNotifierProvider<provider_ejercicios>(create: (_) => provider_ejercicios()),
-                             //        ],
-                             //        builder: (context, child) => Categoria_ejercicio(proviene: "rutina",id_rutina: rutina.rutinas[index].id_rutina),
-                             //      )));
                               rutina.agregarSerie(context,rutina.rutinas[index].id_rutina);
                             },
                             icon: const Icon(
@@ -144,7 +140,7 @@ class _RutinaState extends State<Rutina> {
               padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .01,bottom: 10),
               child: GestureDetector(
                 onTap: () {
-                  Get.to(Usuarios(provine: "rutina",id_rutina: rutina.rutinas[index].id_rutina!,));
+                 // Get.to(Usuarios(provine: "rutina",id_rutina: rutina.rutinas[index].id_rutina!,));
                 },
                 child: Stack(
                   alignment: Alignment.center,

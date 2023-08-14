@@ -379,15 +379,55 @@ class provider_rutina with ChangeNotifier {
   Future eliminar_ejercicio_rutina(id_rutina, id_ejercicio) async {
     await api_rutina.eliminar_ejercicio_rutina(id_rutina, id_ejercicio);
   }
-  addEjercicio(Ejercicio_Model eje,id_rutina)async{
+  advertencia3(context) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Advertencia",
+      desc: "Este ejercicio, ya se encuentra en la lista para esta serie",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Aceptar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          width: 120,
+        ),
+      ],
+    ).show();
+  }
+
+
+  addEjercicio(context,Ejercicio_Model eje,id_rutina)async{
+    print('eje ${eje.id_ejercicio}');
     await getUser();
-     ejercicios.add(eje);
-    ejercicios_rutina.add(Rutina_Ejercicio_Model(
-      id_ejercicio: eje.id_ejercicio,
-      asignado_a: user!.idU,
-      tipo_usuario: user!.tipo_user,
-      id_rutina: id_rutina
-    ));
+
+    if(ejercicios_rutina.isNotEmpty){
+      var isExiste = ejercicios_rutina.indexWhere((element) => element.id_ejercicio == eje.id_ejercicio);
+      if(isExiste == -1){
+        ejercicios.add(eje);
+        ejercicios_rutina.add(Rutina_Ejercicio_Model(
+            id_ejercicio: eje.id_ejercicio,
+            asignado_a: user!.idU,
+            tipo_usuario: user!.tipo_user,
+            id_rutina: id_rutina
+        ));
+      }else{
+        print('no se agrega');
+        advertencia3(context);
+      }
+    }else{
+      ejercicios.add(eje);
+      ejercicios_rutina.add(Rutina_Ejercicio_Model(
+          id_ejercicio: eje.id_ejercicio,
+          asignado_a: user!.idU,
+          tipo_usuario: user!.tipo_user,
+          id_rutina: id_rutina
+      ));
+    }
     notifyListeners();
   }
 
@@ -403,7 +443,11 @@ class provider_rutina with ChangeNotifier {
         print('el id dela serie ${serie!.id_serie}');
         ejercicio.id_serie = serie!.id_serie;
         ejercicio.asignado_a = user!.idU;
+        ejercicio.series = "1";
+        ejercicio.repeticiones = 1;
+        ejercicio.nivel = 1;
         api_rutina.asignatRutina(ejercicio);
+
         if(contador == ejercicios_rutina.length){
           print('temino el for');
           ejercicios_rutina = [];

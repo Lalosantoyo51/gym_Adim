@@ -1,7 +1,10 @@
 import 'package:administrador/screens/Autentificacion/Controller/controlador_auth.dart';
 import 'package:administrador/screens/Autentificacion/Model/user_model.dart';
 import 'package:administrador/screens/Autentificacion/Screen/registro.dart';
+import 'package:administrador/screens/gym/api/entrenamiento_apis.dart';
 import 'package:administrador/screens/gym/api/rutina_apis.dart';
+import 'package:administrador/screens/gym/models/entrenamiento_model.dart';
+import 'package:administrador/screens/gym/providers/provider_entrenamiento.dart';
 import 'package:administrador/screens/gym/providers/provider_rutina.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,8 +12,9 @@ import 'package:provider/provider.dart';
 
 class Usuarios extends StatefulWidget {
   String provine;
-  int? id_rutina;
-  Usuarios({Key? key,required this.provine,this.id_rutina}) : super(key: key);
+  int? id_ent;
+  List<Entrenamoento_Model>? entrenamientos = [];
+  Usuarios({Key? key,required this.provine,this.id_ent,required this.entrenamientos}) : super(key: key);
 
   @override
   State<Usuarios> createState() => _UsuariosState();
@@ -19,6 +23,7 @@ class Usuarios extends StatefulWidget {
 class _UsuariosState extends State<Usuarios> {
   ControladorAuth auth = ControladorAuth();
   Rutina_Apis rutina_api = Rutina_Apis();
+  Entrenamiento_Apis ent_api = Entrenamiento_Apis();
   List<UserModel> users = [];
   bool enable = true;
   bool isAdding = false;
@@ -47,7 +52,7 @@ class _UsuariosState extends State<Usuarios> {
         });
       });
     }else{
-      await rutina_api.get_usurios_rutina(widget.id_rutina).then((List<UserModel> users) {
+      await ent_api.get_usurios_entrenamiento(widget.id_ent).then((List<UserModel> users) {
         setState(() {
           this.users = users;
         });
@@ -57,7 +62,7 @@ class _UsuariosState extends State<Usuarios> {
   adding()async{
     if(isAdding == false){
       isAdding = true;
-      await rutina_api.get_usurios(widget.id_rutina).then((List<UserModel> users) {
+      await ent_api.get_usurios(widget.id_ent).then((List<UserModel> users) {
         setState(() {
           this.users = users;
         });
@@ -68,7 +73,7 @@ class _UsuariosState extends State<Usuarios> {
     }
   }
   gets()async{
-    await rutina_api.get_usurios(widget.id_rutina).then((List<UserModel> users) {
+    await ent_api.get_usurios(widget.id_ent).then((List<UserModel> users) {
       setState(() {
         this.users = users;
       });
@@ -80,6 +85,7 @@ class _UsuariosState extends State<Usuarios> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final rutina = Provider.of<provider_rutina>(context);
+    final ent_provider = Provider.of<provider_entrenamiento>(context);
     return Scaffold(
       appBar: AppBar(
           title:  Text(
@@ -168,13 +174,13 @@ class _UsuariosState extends State<Usuarios> {
                         children: [
                           isAdding == false?
                           IconButton(
-                              onPressed: () => rutina.eliminar_rutina_usuario(users[index].idU, widget.id_rutina).then((value) => getUsers()),
+                              onPressed: () => ent_provider.eliminar_rutina_usuario(users[index].idU, widget.id_ent,widget.entrenamientos).then((value) => getUsers()),
                               icon: const Icon(
                                 Icons.cancel,
                                 color: Colors.red,
                                 size: 30,
                               )):   IconButton(
-                            onPressed: () => rutina.existe_el_ususrio(context,users[index].idU, widget.id_rutina,users[index].tipo_user),
+                            onPressed: () => ent_provider.existe_el_ususrio(context,users[index].idU, widget.id_ent,users[index].tipo_user,widget.entrenamientos),
                               /*onPressed: () => rutina.asignarUsuario(widget.id_rutina,users[index].idU,users[index].tipo_user).then((value){
                                 print('el value sss $value');
                                               if(value =="succes"){

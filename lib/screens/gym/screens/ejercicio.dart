@@ -382,25 +382,9 @@ class _EjercicioState extends State<Ejercicio> {
                             const Text("Agregar a la rutina"),
                             IconButton(
                                 onPressed: () {
-                                  rutina.addEjercicio(eje,widget.id_rutina);
-                                  //rutina.obtener_usuarios_rutina(widget.id_rutina).then((List<UserModel> users) {
-                                  //  setState(() {
-                                  //    rutina.agregarEjercicio(context,widget.id_rutina!, eje.id_ejercicio!);
-                                  //    for(var user in users){
-                                  //      rutina.agregarEjercicio(context,widget.id_rutina!, eje.id_ejercicio!);
-                                  //      rutina.api_rutina.asignatRutina(Rutina_Ejercicio_Model(
-                                  //          id_rutina: widget.id_rutina!,
-                                  //          id_ejercicio: eje.id_ejercicio,
-                                  //          asignado_a: user.idU,
-                                  //          nivel: rutina.rating,
-                                  //          repeticiones: int.parse(rutina.repeticiones.text),
-                                  //          series: int.parse(rutina.series.text))).then((value){
-                                  //      });
-                                  //    }
-                                  //  });
-                                  //});
+                                  rutina.addEjercicio(context,eje,widget.id_rutina);
                                 },
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.add,
                                   size: 35,
                                   color: Colors.green,

@@ -110,7 +110,7 @@ class _Serie_EjerciciosState extends State<Serie_Ejercicios> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: width / 3,
+                  width: width / 1.1,
                   padding: EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,53 +122,8 @@ class _Serie_EjerciciosState extends State<Serie_Ejercicios> {
                     ],
                   ),
                 ),
-                Container(
-                  width: width / 3.5,
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Serie"),
-                      Input2(
-                        texto: "",
-                        onChanged: (value) {
-                          rutina.onchangeS(value, index);
-                        },
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  width: width / 3.5,
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Repeticion"),
-                      Input2(
-                        texto: "",
-                        onChanged: (value) {
-                          rutina.onchangeR(value, index: index);
-                        },
-                      )
-                    ],
-                  ),
-                ),
               ],
             )),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Nivel"),
-                  Nivel(initialRating: rutina.rating.toDouble(), size: 50,isEnabled: false,onChanged: (rating){
-                    rutina.rating = int.parse(rating.toString().substring(0,1));
-                    rutina.onChangedRating(rating, index);
-                  }),
-                ],
-              ),
-            )
           ],
         )));
   }

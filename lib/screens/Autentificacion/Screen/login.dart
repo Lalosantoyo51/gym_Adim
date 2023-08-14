@@ -51,6 +51,7 @@ class _LoginState extends State<Login> {
               inputController: contrasena,
               texto: "Contraseña",
               isBlack: false,
+              obscureText: true,
             ),
             Padding(
               padding:

@@ -1,4 +1,5 @@
 import 'package:administrador/screens/Autentificacion/Model/user_model.dart';
+import 'package:administrador/screens/Autentificacion/Screen/login.dart';
 import 'package:administrador/screens/gym/providers/provider_categorias.dart';
 import 'package:administrador/screens/gym/providers/provider_ejercicios.dart';
 import 'package:administrador/screens/gym/providers/provider_rutina.dart';
@@ -10,6 +11,7 @@ import 'package:administrador/screens/gym/screens/usuarios.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeAdmin extends StatelessWidget {
   UserModel user;
@@ -74,7 +76,7 @@ class HomeAdmin extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                options(width,"Usuarios",() => Get.to(Usuarios(provine: "home",))),
+                options(width,"Usuarios",() => Get.to(Usuarios(provine: "home",entrenamientos: [],))),
                 options(width,"Categoria Ejercicio",(){
                   Navigator.of(context).push(
                       MaterialPageRoute(
@@ -114,6 +116,23 @@ class HomeAdmin extends StatelessWidget {
                             ChangeNotifierProvider<provider_rutina>(create: (_) => provider_rutina()),
                           ],
                           builder: (context, child) => Entrenamiento(),
+                        ),)
+                  );
+
+                }),
+                const SizedBox(
+                  height: 5,
+                ),
+                options(width,"Salir",() async{
+                  SharedPreferences sp = await SharedPreferences.getInstance();
+                  sp.clear();
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider<provider_rutina>(create: (_) => provider_rutina()),
+                          ],
+                          builder: (context, child) => Login(),
                         ),)
                   );
 
