@@ -22,7 +22,6 @@ class Nivel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rutinasProvider = Provider.of<provider_rutina>(context);
     return RatingBar.builder(
       ignoreGestures: isEnabled,
       itemSize: size,

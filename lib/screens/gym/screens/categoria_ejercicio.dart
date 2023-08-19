@@ -128,7 +128,7 @@ class _Categoria_ejercicioState extends State<Categoria_ejercicio> {
 
   SizedBox form(double height, double width, BuildContext context,cat_eje_provider) {
     return SizedBox(
-      height: height/2,
+      height: height,
       width: width,
       child: ListView(
         children: [

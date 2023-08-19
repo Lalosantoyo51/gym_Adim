@@ -86,8 +86,11 @@ class provider_entrenamiento with ChangeNotifier {
       initialDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 2),
     );
-    inicio = date;
-    notifyListeners();
+    if(date.isNull){
+    }else{
+      inicio = date;
+      notifyListeners();
+    }
   }
 
   mostrarFechaFin(context) async {
@@ -99,8 +102,11 @@ class provider_entrenamiento with ChangeNotifier {
       initialDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 2),
     );
-    fin = date;
-    notifyListeners();
+    if(date.isNull){
+    }else{
+      fin = date;
+      notifyListeners();
+    }
   }
 
   next(context) {

@@ -1,17 +1,23 @@
+import 'dart:io';
+
 import 'package:administrador/screens/Autentificacion/Screen/login.dart';
 import 'package:administrador/screens/gym/providers/provider_categorias.dart';
 import 'package:administrador/screens/gym/providers/provider_ejercicios.dart';
 import 'package:administrador/screens/gym/providers/provider_entrenamiento.dart';
+import 'package:administrador/screens/gym/providers/provider_reto.dart';
 import 'package:administrador/screens/gym/providers/reproductor_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import 'myoberride.dart';
 import 'screens/gym/providers/provider_rutina.dart';
 import 'screens/inicio.dart';
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
+
   runApp(const MyApp());
 }
 
@@ -37,6 +43,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => provider_entrenamiento(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => provider_reto(),
         ),
       ],
       child: GetMaterialApp(

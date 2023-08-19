@@ -14,7 +14,12 @@ class Usuarios extends StatefulWidget {
   String provine;
   int? id_ent;
   List<Entrenamoento_Model>? entrenamientos = [];
-  Usuarios({Key? key,required this.provine,this.id_ent,required this.entrenamientos}) : super(key: key);
+  Usuarios(
+      {Key? key,
+      required this.provine,
+      this.id_ent,
+      required this.entrenamientos})
+      : super(key: key);
 
   @override
   State<Usuarios> createState() => _UsuariosState();
@@ -35,9 +40,9 @@ class _UsuariosState extends State<Usuarios> {
     super.initState();
   }
 
-  getUsers() async{
-    if(widget.provine == "home"){
-      await auth.getUser().then((UserModel? user){
+  getUsers() async {
+    if (widget.provine == "home") {
+      await auth.getUser().then((UserModel? user) {
         auth.get_admins(user!.email).then((List<UserModel> users) {
           setState(() {
             this.users = users;
@@ -51,28 +56,32 @@ class _UsuariosState extends State<Usuarios> {
           });
         });
       });
-    }else{
-      await ent_api.get_usurios_entrenamiento(widget.id_ent).then((List<UserModel> users) {
+    } else {
+      await ent_api
+          .get_usurios_entrenamiento(widget.id_ent)
+          .then((List<UserModel> users) {
         setState(() {
           this.users = users;
         });
       });
     }
   }
-  adding()async{
-    if(isAdding == false){
+
+  adding() async {
+    if (isAdding == false) {
       isAdding = true;
       await ent_api.get_usurios(widget.id_ent).then((List<UserModel> users) {
         setState(() {
           this.users = users;
         });
       });
-    }else{
+    } else {
       isAdding = false;
       getUsers();
     }
   }
-  gets()async{
+
+  gets() async {
     await ent_api.get_usurios(widget.id_ent).then((List<UserModel> users) {
       setState(() {
         this.users = users;
@@ -88,18 +97,19 @@ class _UsuariosState extends State<Usuarios> {
     final ent_provider = Provider.of<provider_entrenamiento>(context);
     return Scaffold(
       appBar: AppBar(
-          title:  Text(
-            widget.provine == "home"?
-            "Usuarios": "Usuarios de la rutina",
+          title: Text(
+            widget.provine == "home" ? "Usuarios" : "Usuarios de la rutina",
           ),
           centerTitle: true,
           backgroundColor: Colors.black),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => widget.provine == "home"? Get.to(Registro(
-                proviene: "registo",
-              ))?.then((value) => getUsers()): adding(),
+          onPressed: () => widget.provine == "home"
+              ? Get.to(Registro(
+                  proviene: "registo",
+                ))?.then((value) => getUsers())
+              : adding(),
           backgroundColor: Colors.black,
-          child:  Icon(isAdding == false?Icons.add:Icons.cancel)),
+          child: Icon(isAdding == false ? Icons.add : Icons.cancel)),
       body: Container(
         width: width,
         height: height,
@@ -121,67 +131,84 @@ class _UsuariosState extends State<Usuarios> {
                           ? const Text("Aministrador")
                           : users[index].tipo_user == 4
                               ? const Text("Instrusctor")
-                              :users[index].tipo_user == 5?  Text("Nutriologo"):Text("Usuario"),
+                              : users[index].tipo_user == 5
+                                  ? Text("Nutriologo")
+                                  : Text("Usuario"),
                     ],
                   ),
-                  widget.provine == "home"?
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Acciones"),
-                      Row(
-                        children: [
-                          IconButton(
-                              onPressed: () => Get.to(Registro(
-                                    proviene: "editar",
-                                    user: users[index],
-                                  ))?.then((value) => getUsers()),
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Colors.orange,
-                                size: 30,
-                              )),
-                          Switch(
-                              activeColor: Colors.black,
-                              value: users[index].disponible,
-                              onChanged: (value) {
-                                users[index].disponible = value;
-                                setState(() {
-                                  if (value == true) {
-                                    auth.isdisponible(0, users[index].idU);
-                                  } else {
-                                    auth.isdisponible(1, users[index].idU);
-                                  }
-                                });
-                              }),
-                          IconButton(
-                              onPressed: () => auth
-                                  .eliminar_empleado(users[index].idU)
-                                  .then((value) => getUsers()),
-                              icon: const Icon(
-                                Icons.cancel,
-                                color: Colors.red,
-                                size: 30,
-                              )),
-                        ],
-                      ),
-                    ],
-                  ):  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Acciones"),
-                      Row(
-                        children: [
-                          isAdding == false?
-                          IconButton(
-                              onPressed: () => ent_provider.eliminar_rutina_usuario(users[index].idU, widget.id_ent,widget.entrenamientos).then((value) => getUsers()),
-                              icon: const Icon(
-                                Icons.cancel,
-                                color: Colors.red,
-                                size: 30,
-                              )):   IconButton(
-                            onPressed: () => ent_provider.existe_el_ususrio(context,users[index].idU, widget.id_ent,users[index].tipo_user,widget.entrenamientos),
-                              /*onPressed: () => rutina.asignarUsuario(widget.id_rutina,users[index].idU,users[index].tipo_user).then((value){
+                  widget.provine == "home"
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text("Acciones"),
+                            Row(
+                              children: [
+                                IconButton(
+                                    onPressed: () => Get.to(Registro(
+                                          proviene: "editar",
+                                          user: users[index],
+                                        ))?.then((value) => getUsers()),
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.orange,
+                                      size: 30,
+                                    )),
+                                Switch(
+                                    activeColor: Colors.black,
+                                    value: users[index].disponible,
+                                    onChanged: (value) {
+                                      users[index].disponible = value;
+                                      setState(() {
+                                        if (value == true) {
+                                          auth.isdisponible(
+                                              0, users[index].idU);
+                                        } else {
+                                          auth.isdisponible(
+                                              1, users[index].idU);
+                                        }
+                                      });
+                                    }),
+                                IconButton(
+                                    onPressed: () => auth
+                                        .eliminar_empleado(users[index].idU)
+                                        .then((value) => getUsers()),
+                                    icon: const Icon(
+                                      Icons.cancel,
+                                      color: Colors.red,
+                                      size: 30,
+                                    )),
+                              ],
+                            ),
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text("Acciones"),
+                            Row(
+                              children: [
+                                isAdding == false
+                                    ? IconButton(
+                                        onPressed: () => ent_provider
+                                            .eliminar_rutina_usuario(
+                                                users[index].idU,
+                                                widget.id_ent,
+                                                widget.entrenamientos)
+                                            .then((value) => getUsers()),
+                                        icon: const Icon(
+                                          Icons.cancel,
+                                          color: Colors.red,
+                                          size: 30,
+                                        ))
+                                    : IconButton(
+                                        onPressed: () =>
+                                            ent_provider.existe_el_ususrio(
+                                                context,
+                                                users[index].idU,
+                                                widget.id_ent,
+                                                users[index].tipo_user,
+                                                widget.entrenamientos),
+                                        /*onPressed: () => rutina.asignarUsuario(widget.id_rutina,users[index].idU,users[index].tipo_user).then((value){
                                 print('el value sss $value');
                                               if(value =="succes"){
                                   rutina.succes2(context);
@@ -189,15 +216,15 @@ class _UsuariosState extends State<Usuarios> {
                                   rutina.advertencia2(context);
                                 }
                               }),*/
-                              icon: const Icon(
-                                Icons.add_circle_outline,
-                                color: Colors.green,
-                                size: 30,
-                              )),
-                        ],
-                      ),
-                    ],
-                  ),
+                                        icon: const Icon(
+                                          Icons.add_circle_outline,
+                                          color: Colors.green,
+                                          size: 30,
+                                        )),
+                              ],
+                            ),
+                          ],
+                        ),
                 ],
               )))),
         ),
