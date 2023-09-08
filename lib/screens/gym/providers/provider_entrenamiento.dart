@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:administrador/screens/Autentificacion/Model/user_model.dart';
 import 'package:administrador/screens/gym/api/entrenamiento_apis.dart';
 import 'package:administrador/screens/gym/api/rutina_apis.dart';
+import 'package:administrador/screens/gym/models/asistencia.dart';
 import 'package:administrador/screens/gym/models/dias.dart';
 import 'package:administrador/screens/gym/models/entrenamiento_eje.dart';
 import 'package:administrador/screens/gym/models/entrenamiento_model.dart';
@@ -19,6 +20,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class provider_entrenamiento with ChangeNotifier {
   Entrenamiento_Apis ent_api = Entrenamiento_Apis();
+  List<AsistenciaModel> asitencias =[];
+  int selectAsistencia  = 0;
+  bool loading = false;
+
   TextEditingController nombre_entrenamiento = TextEditingController();
   List<DiasModel> dias = [
     DiasModel(dia: "Lunes", enable: false, series: []),
@@ -30,6 +35,7 @@ class provider_entrenamiento with ChangeNotifier {
     DiasModel(dia: "Domingo", enable: false, series: []),
   ];
   List<Entrenamoento_Model> entrenamientos = [];
+  List<Entrenamoento_Model> entrenamientosBuscar = [];
   List<Entrenamoento_Model> entrenamientosVista = [];
 
   UserModel? user;
@@ -52,8 +58,9 @@ class provider_entrenamiento with ChangeNotifier {
   TimeOfDay time = const TimeOfDay(hour: 0, minute: 0);
   int intensidad = 0;
   int se = 10;
-
+  bool showUser = false;
   final DateFormat formatter = DateFormat('dd-MMMM-yyyy', "es");
+  final DateFormat horaFormatter = DateFormat('HH:mm', "es");
   late DateTime inicio = DateTime(1995);
   late DateTime fin = DateTime(1995);
 
@@ -395,12 +402,14 @@ class provider_entrenamiento with ChangeNotifier {
   }
 
   getEntrenamientos() {
+    loading = true;
     ent_api.obtenerEntrenamiento().then((List<Entrenamoento_Model> entrena) {
       entrena.forEach((element) {
         element.dias!.forEach((dia) {
           dia.series!.removeWhere((element) => element.ejercicios!.isEmpty);
         });
       });
+      loading = false;
       entrenamientos = entrena;
       notifyListeners();
     });
@@ -585,6 +594,35 @@ class provider_entrenamiento with ChangeNotifier {
       });
     });
 
+  }
+
+  getAsistencia(){
+    ent_api.getAsistencia().then((List<AsistenciaModel> listAsistencia) {
+      asitencias = listAsistencia;
+      notifyListeners();
+    });
+  }
+
+  mostrarInfo(){
+    if(showUser) {
+      showUser=false;
+    }else{
+      showUser=true;
+    }
+    notifyListeners();
+  }
+
+  buscarP(String bu){
+    final bus = entrenamientos.cast<Entrenamoento_Model>().where((element) => element.nombre_ent!.toUpperCase().contains(bu.toUpperCase()));
+    if(bus.isEmpty){
+      entrenamientosBuscar = [];
+    }else{
+      entrenamientosBuscar = [];
+      bus.forEach((Entrenamoento_Model ent) {
+        entrenamientosBuscar.add(ent);
+      });
+    }
+    notifyListeners();
   }
 
 }

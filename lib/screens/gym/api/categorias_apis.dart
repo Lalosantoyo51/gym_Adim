@@ -66,9 +66,6 @@ class Api_cat{
     }else{
       return actualizar_cat_eje(cat,"");
     }
-
-
-
   }
 
   Future eliminarImagen(fileid)async{

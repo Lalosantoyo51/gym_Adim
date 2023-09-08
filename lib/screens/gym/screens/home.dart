@@ -6,6 +6,7 @@ import 'package:administrador/screens/gym/providers/provider_rutina.dart';
 import 'package:administrador/screens/gym/screens/categoria_ejercicio.dart';
 import 'package:administrador/screens/gym/screens/create_entrenamiento.dart';
 import 'package:administrador/screens/gym/screens/entrenamientos.dart';
+import 'package:administrador/screens/gym/screens/recepcion/generar_qr.dart';
 import 'package:administrador/screens/gym/screens/retos/retosP.dart';
 import 'package:administrador/screens/gym/screens/rutina.dart';
 import 'package:administrador/screens/gym/screens/usuarios.dart';
@@ -24,6 +25,7 @@ class HomeAdmin extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
           centerTitle: true,
           title: const Text(
@@ -139,6 +141,20 @@ class HomeAdmin extends StatelessWidget {
                       create: (_) => provider_rutina()),
                 ],
                 builder: (context, child) => RetosP(),
+              ),
+            ));
+          }),
+          const SizedBox(
+            height: 5,
+          ),
+          options(width, "Recepcion", () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => MultiProvider(
+                providers: [
+                  ChangeNotifierProvider<provider_rutina>(
+                      create: (_) => provider_rutina()),
+                ],
+                builder: (context, child) => Genererar_QR(),
               ),
             ));
           }),

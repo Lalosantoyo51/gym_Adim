@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:administrador/enviroments.dart';
 import 'package:administrador/screens/Autentificacion/Model/user_model.dart';
+import 'package:administrador/screens/gym/models/asistencia.dart';
 import 'package:administrador/screens/gym/models/dias.dart';
 import 'package:administrador/screens/gym/models/ejercicio.dart';
 import 'package:administrador/screens/gym/models/entrenamiento_eje.dart';
@@ -275,4 +276,28 @@ class Entrenamiento_Apis {
       print('el error ${e.error}');
     }
   }
+
+  Future<List<AsistenciaModel>> getAsistencia()async{
+    List<AsistenciaModel> asistencia = [];
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    Response response;
+    try {
+      print('${uriP}recepcion.php?op=historial');
+      response = await dio.get('${uriP}recepcion.php?op=historial',options: options2);
+      asistencia = (json.decode(response.data) as List)
+          .map((data) => AsistenciaModel.fromJson(data))
+          .toList();
+      return asistencia;
+    } on DioError catch (e) {
+      print('el error ${e.error}');
+    }
+    return asistencia;
+  }
+
+
 }

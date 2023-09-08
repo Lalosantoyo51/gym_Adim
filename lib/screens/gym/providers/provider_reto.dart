@@ -54,7 +54,6 @@ class provider_reto with ChangeNotifier {
     }
   }
 
-
   mostrarFechaFin(context) async {
     DateTime date = await PlatformDatePicker.showDate(
       locale: const Locale('es'),
@@ -157,7 +156,7 @@ class provider_reto with ChangeNotifier {
     retoApis.eliminar_reto(id_reto, fileid).then((value) => getRetos());
   }
 
-  advertencia(context, int id_reto, int fileid,accion, {id_usuario}) async {
+  advertencia(context, int id_reto, int fileid, accion, {id_usuario}) async {
     await Alert(
       context: context,
       type: AlertType.warning,
@@ -177,10 +176,12 @@ class provider_reto with ChangeNotifier {
         DialogButton(
           color: Colors.red,
           onPressed: () {
-            if(accion == "reto"){
+            if (accion == "reto") {
               eliminarReto(id_reto, fileid);
-            }else{
-              retoApis.eliminarRetoUsuario(id_reto, id_usuario).then((value) => getUsuarios(id_reto));
+            } else {
+              retoApis
+                  .eliminarRetoUsuario(id_reto, id_usuario)
+                  .then((value) => getUsuarios(id_reto));
             }
             Navigator.pop(context);
           },
@@ -194,7 +195,10 @@ class provider_reto with ChangeNotifier {
     ).show();
   }
 
-  message(context, String message,) async {
+  message(
+    context,
+    String message,
+  ) async {
     await Alert(
       context: context,
       type: AlertType.success,
@@ -234,24 +238,35 @@ class provider_reto with ChangeNotifier {
     }
   }
 
-  asignarUsuario(id_reto, id_usuario, asignadox) {
-    retoApis.asignarUsu(id_reto, id_usuario, asignadox).then((value) => getUsuarios(id_reto));
+  asignarUsuario(id_reto, id_usuario, asignadox) async{
+    print('el id del usuario $id_usuario');
+    retoApis
+        .asignarUsu(id_reto, id_usuario, asignadox)
+        .then((value) async{
+          RetoModel reto = listReto.firstWhere((element) => element.id_reto == id_reto);
+          print('el reto ${reto.nombre}');
+          print('el id del usuario $id_usuario');
+      UserModel user =  userDisponibles.firstWhere((element) => element.idU == id_usuario);
+          user.dispositivos!.forEach((element) {
+             retoApis.pushNotification(id_usuario, element.token, reto);
+          });
+         await getUsuarios(id_reto);
+
+    });
   }
 
-  accion(context,id_reto, id_usuario)async{
+  accion(context, id_reto, id_usuario) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     var usu = sp.getString("usuario");
     print('usu ${usu}');
     if (usu != null) {
       UserModel user = UserModel.fromJson2(json.decode(usu));
-      if(addPerson == true){
+      if (addPerson == true) {
         asignarUsuario(id_reto, id_usuario, user.idU);
-      }else{
-        advertencia(context, id_reto, 0, accion,id_usuario: id_usuario);
+      } else {
+        advertencia(context, id_reto, 0, accion, id_usuario: id_usuario);
       }
     }
-
-
   }
 
   cambiar() {

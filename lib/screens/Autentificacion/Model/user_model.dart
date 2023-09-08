@@ -1,19 +1,24 @@
-class UserModel {
-  final String nombre;
-  final String email;
-  final String apellidos;
-  final String password;
-  final String celular;
-  final int genero;
-  final String fehca_nac;
-  final int idU;
-  final String imagenPerfil;
-  final int peso;
-  final int altura;
-  final int tipo_user;
-  final int enable;
+import 'package:administrador/screens/gym/models/dispositivo.dart';
+
+class UserModel{
+  late String nombre;
+  late String email;
+  late String apellidos;
+  late String password;
+  late String celular;
+  late int genero;
+  late String fehca_nac;
+  late int idU;
+  late String imagenPerfil;
+  late int peso;
+  late int altura;
+  late int tipo_user;
+  late int enable;
   bool disponible;
+  late List<DispositivoModel>? dispositivos =[];
+
   UserModel({
+
     required this.nombre,
     required this.email,
     required this.celular,
@@ -28,6 +33,7 @@ class UserModel {
     this.altura = 0,
     this.enable = 0,
     this.disponible = true,
+    this.dispositivos
   });
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -58,6 +64,24 @@ class UserModel {
       password: "",
     );
   }
+  UserModel.fromJsonDispositivo(Map<String,dynamic> json):
+        nombre = json["nombre"],
+        email = json["email"],
+        apellidos = json["apellidos"],
+        password = json["password"],
+        celular = json["celular"],
+        genero = int.parse(json["genero"]),
+        fehca_nac = json["fehca_nac"],
+        idU = int.parse(json["id_usuario"]),
+        imagenPerfil = json["imagenPerfil"],
+        peso = json["peso"],
+        altura = json["altura"],
+        tipo_user = int.parse(json["tipo_user"]),
+        enable = json["enable"],
+        disponible = true,
+        dispositivos =  (json["dispositivos"] as List)
+            .map((i) => DispositivoModel.fromJson(i))
+            .toList();
 
 
   Map toJson() => {

@@ -18,6 +18,10 @@ class RetoApis {
   });
   var options2 =
       Options(headers: {'Content-type': 'application/json; charset=UTF-8'});
+  var options3 = Options(headers: {
+    'Authorization':
+        'key=AAAAhOndpUw:APA91bHO6C6yeNLoa0hOVt9cskZ_6I0MsesP3jsB7g7o-vWxmUr7yMRN4-QQEfNou2fEmxVUTkmNqvU9CXf20MthAF-y2cOmTbGYn2OBqGN4K0xngdax-fGhT-zjk9ifaA3G49UqvTij'
+  });
   Future subirImagenCatEje(
       XFile? file, RetoModel retoModel, String accion) async {
     Response response;
@@ -248,7 +252,7 @@ class RetoApis {
       print('el response de diponibles ${response.data}');
 
       listUser = (json.decode(response.data) as List)
-          .map((data) => UserModel.fromJson(data))
+          .map((data) => UserModel.fromJsonDispositivo(data))
           .toList();
       return listUser;
     } on DioError catch (e) {
@@ -257,11 +261,45 @@ class RetoApis {
     return listUser;
   }
 
+  Future pushNotification(int id_usuario, token, RetoModel reto) async {
+    print('el token $id_usuario');
+    var datos = {
+      "to": token,
+      "notification": {
+        "body": reto.nombre,
+        "title": "Te han agregado a un reto",
+        "image": reto.imagen
+      },
+      "data" : {
+        "usuario" : "$id_usuario"
+      }
+    };
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    Response response;
+    try {
+      print('https://fcm.googleapis.com/fcm/send');
+      response = await dio.post('https://fcm.googleapis.com/fcm/send',
+          data: json.encode(datos), options: options3);
+      String err = response.data["results"][0]["error"];
+      if(err == "InvalidRegistration"){
+        eliminarDispositivo(token);
+      }
+      return response.data;
+    } on DioError catch (e) {
+      print('el error ${e.error}');
+    }
+  }
+
   Future asignarUsu(id_reto, id_usuario, asignadox) async {
     var datos = {
-      "id_reto":id_reto,
-      "id_usuario":id_usuario,
-      "asignadox":asignadox
+      "id_reto": id_reto,
+      "id_usuario": id_usuario,
+      "asignadox": asignadox
     };
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
@@ -280,11 +318,9 @@ class RetoApis {
       print('el error ${e.error}');
     }
   }
+
   Future eliminarRetoUsuario(id_reto, id_usuario) async {
-    var datos = {
-      "id_reto":id_reto,
-      "id_usuario":id_usuario
-    };
+    var datos = {"id_reto": id_reto, "id_usuario": id_usuario};
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.badCertificateCallback =
@@ -295,6 +331,26 @@ class RetoApis {
     try {
       print('${uriP}reto.php?op=eliminarRetoUsuario');
       response = await dio.post('${uriP}reto.php?op=eliminarRetoUsuario',
+          data: datos, options: options2);
+      print('el response ${response.data}');
+      return response.data;
+    } on DioError catch (e) {
+      print('el error ${e.error}');
+    }
+  }
+
+  Future eliminarDispositivo(token) async {
+    var datos = {"token": token};
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    Response response;
+    try {
+      print('${uriP}reto.php?op=eliminarDispositivo');
+      response = await dio.post('${uriP}reto.php?op=eliminarDispositivo',
           data: datos, options: options2);
       print('el response ${response.data}');
       return response.data;

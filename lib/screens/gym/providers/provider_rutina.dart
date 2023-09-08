@@ -23,6 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class provider_rutina with ChangeNotifier {
   List<Rutina_Model> rutinas = [];
+  List<Rutina_Model> rutinasBuscar = [];
   List<Rutina_Ejercicio_Model> ejercicios_rutina = [];
   List<SerieModel> listSeries = [];
   Rutina_Apis api_rutina = Rutina_Apis();
@@ -246,7 +247,7 @@ class provider_rutina with ChangeNotifier {
     Alert(
       context: context,
       type: AlertType.info,
-      title: "Agrega la nueva rutina",
+      title: "Agregar nuevar rutina",
       content: Column(
         children: [Input(inputController: nombre, texto: "Nombre")],
       ),
@@ -472,5 +473,19 @@ class provider_rutina with ChangeNotifier {
     ejercicios_rutina[index].nivel = value.toInt();
 
     print('sss ${value}');
+  }
+
+  buscarP(String bu){
+
+    final rut = rutinas.cast<Rutina_Model>().where((element) => element.nombre!.toUpperCase().contains(bu.toUpperCase()));
+    if(rut.isEmpty){
+      rutinasBuscar = [];
+    }else{
+      rutinasBuscar = [];
+      rut.forEach((Rutina_Model rut) {
+        rutinasBuscar.add(rut);
+      });
+    }
+    notifyListeners();
   }
 }

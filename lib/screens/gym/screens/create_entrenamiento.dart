@@ -64,7 +64,7 @@ List<DropdownMenuItem<String>> minSec = [
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Entrenamiento ${rutina.rutinas.length}"),
+        title: Text("Entrenamiento"),
         backgroundColor: Colors.black,
         centerTitle: true,
       ),
@@ -509,6 +509,7 @@ List<DropdownMenuItem<String>> minSec = [
                           Input3(
                             texto: "",
                             proviene: 1,
+                            isNumber: true,
                             dia: dia,
                             index: index,
                             index2: index2,
@@ -530,6 +531,7 @@ List<DropdownMenuItem<String>> minSec = [
                             texto: "",
                             proviene: 2,
                             dia: dia,
+                            isNumber: true,
                             index: index,
                             index2: index2,
                             onChanged: (value) {

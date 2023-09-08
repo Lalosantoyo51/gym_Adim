@@ -1,5 +1,6 @@
 import 'package:administrador/screens/gym/providers/provider_entrenamiento.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class Input3 extends StatefulWidget {
@@ -15,6 +16,7 @@ class Input3 extends StatefulWidget {
   int index2;
   int dia;
   int proviene;
+  final bool isNumber;
    Input3({
     super.key,
     required this.texto,
@@ -22,6 +24,7 @@ class Input3 extends StatefulWidget {
     required this.index,
     required this.index2,
     required this.proviene,
+    required this.isNumber,
     this.onChanged,
     this.estado = false,
     this.sizeInput = 300,
@@ -82,6 +85,7 @@ class _Input3 extends State<Input3> {
             ],
           ),
           child: TextField(
+            keyboardType: widget.isNumber == true ?TextInputType.number:TextInputType.text,
             enabled: widget.editable,
             controller: inputController,
             onChanged: widget.onChanged,
