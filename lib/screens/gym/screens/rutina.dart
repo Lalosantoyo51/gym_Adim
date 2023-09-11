@@ -168,32 +168,6 @@ class _RutinaState extends State<Rutina> {
                 )
               ],
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * .01, bottom: 10),
-              child: GestureDetector(
-                onTap: () {
-                  // Get.to(Usuarios(provine: "rutina",id_rutina: rutina.rutinas[index].id_rutina!,));
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    BottomGradiant(
-                      colorFinal: const Color.fromRGBO(238, 70, 61, 1),
-                      colorInicial: const Color.fromRGBO(255, 138, 95, 1),
-                      width: MediaQuery.of(context).size.width * .75,
-                      heigth: MediaQuery.of(context).size.height * .04,
-                    ),
-                    Text(
-                      "Asignar usuario",
-                      style: Theme.of(context).textTheme.headline5!.copyWith(
-                            color: Colors.white,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
