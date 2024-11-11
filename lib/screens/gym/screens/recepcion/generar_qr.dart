@@ -16,10 +16,7 @@ class _Genererar_QRState extends State<Genererar_QR> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    final provider = Provider.of<provider_entrenamiento>(context, listen: false);
-    provider.getAsistencia();
-    super.initState();
+
   }
 
   @override
@@ -44,7 +41,7 @@ class _Genererar_QRState extends State<Genererar_QR> {
               Padding(
                 padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * .01,bottom: 10),
                 child: GestureDetector(
-                  onTap: () =>Get.to(Asistencia_Usuario(listAsistencia: provider.asitencias)),
+                  onTap: () =>Get.to(Asistencia_Usuario()),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [

@@ -70,14 +70,18 @@ class _RetosCrearState extends State<RetosCrear> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     reto.inicio.year == 1995
-                        ? ElevatedButton(
+                        ? ElevatedButton(style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                    ),
                         onPressed: () => reto.mostrarFechaInicio(context),
                         child: const Text("Fecha Inicio"))
                         : Text(reto.formatter
                         .format(DateTime.parse(reto.inicio.toString()))
                         .toUpperCase()),
                     reto.fin.year == 1995
-                        ? ElevatedButton(
+                        ? ElevatedButton(style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                    ),
                         onPressed: () => reto.mostrarFechaFin(context),
                         child: const Text("Fecha Fin"))
                         : Text(reto.formatter
@@ -108,8 +112,8 @@ class _RetosCrearState extends State<RetosCrear> {
                     children: [
                       Positioned(
                         child: BottomGradiant(
-                          colorFinal: const Color.fromRGBO(238, 70, 61, 1),
-                          colorInicial: const Color.fromRGBO(255, 138, 95, 1),
+                          colorFinal: const Color.fromRGBO(0, 0, 0, 1),
+                          colorInicial: const Color.fromRGBO(0, 0, 0, 1),
                           width: width * .65,
                           heigth: height * .050,
                         ),

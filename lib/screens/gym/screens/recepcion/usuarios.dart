@@ -3,11 +3,24 @@ import 'package:administrador/screens/gym/providers/provider_entrenamiento.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Asistencia_Usuario extends StatelessWidget {
-  final List<AsistenciaModel> listAsistencia;
-  const Asistencia_Usuario({Key? key, required this.listAsistencia})
+class Asistencia_Usuario extends StatefulWidget {
+  const Asistencia_Usuario({Key? key})
       : super(key: key);
 
+  @override
+  State<Asistencia_Usuario> createState() => _Asistencia_UsuarioState();
+}
+
+class _Asistencia_UsuarioState extends State<Asistencia_Usuario> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    // TODO: implement initState
+    final provider = Provider.of<provider_entrenamiento>(context, listen: false);
+    provider.getAsistencia();
+    super.initState();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final providerEnt = Provider.of<provider_entrenamiento>(context);
@@ -37,7 +50,7 @@ class Asistencia_Usuario extends StatelessWidget {
           child: providerEnt.showUser == false
               ? ListView.builder(
                   shrinkWrap: true,
-                  itemCount: listAsistencia.length,
+                  itemCount: providerEnt.asitencias.length,
                   itemBuilder: (context, index) => Container(
                     padding:
                         const EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -49,7 +62,7 @@ class Asistencia_Usuario extends StatelessWidget {
                         Container(
                             width: width / 2,
                             child: Text(
-                                "${listAsistencia[index].nombre} ${listAsistencia[index].apellido}")),
+                                "${providerEnt.asitencias[index].nombre} ${providerEnt.asitencias[index].apellido}")),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -63,7 +76,7 @@ class Asistencia_Usuario extends StatelessWidget {
                                     },
                                     icon: const Icon(
                                       Icons.remove_red_eye,
-                                      color: Colors.orange,
+                                      color: Color.fromRGBO(6, 19, 249, 1),
                                       size: 30,
                                     )),
                               ],
@@ -76,7 +89,7 @@ class Asistencia_Usuario extends StatelessWidget {
                 )
               : ListaXusuario(
                   asistenciaModel:
-                      listAsistencia[providerEnt.selectAsistencia])),
+                  providerEnt.asitencias[providerEnt.selectAsistencia])),
     );
   }
 }

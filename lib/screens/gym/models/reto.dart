@@ -1,3 +1,5 @@
+import 'package:administrador/screens/Autentificacion/Model/user_model.dart';
+
 class RetoModel {
   late String? nombre;
   late String? objetivos;
@@ -10,7 +12,8 @@ class RetoModel {
   late int? id_reto = 0;
   late String? fecha_inicio;
   late String? fecha_fin;
-
+  late List<UserModel>? users = [];
+  late List<UserModel>? ganadores = [];
   RetoModel(
       {this.id_reto,
       this.nombre,
@@ -21,9 +24,10 @@ class RetoModel {
       this.nivel,
       this.fileid,
       this.fecha_fin,
+        this.ganadores,this.users,
       this.fecha_inicio});
 
-  factory RetoModel.fromJson(Map<String, dynamic> json) {
+  factory RetoModel.fromJson2(Map<String, dynamic> json) {
     return RetoModel(
       id_reto: int.parse(json["id_reto"]),
       fileid: int.parse(json["fileid"]),
@@ -35,6 +39,22 @@ class RetoModel {
       premio: json["premio"],
       fecha_inicio: json["fecha_inicio"],
       fecha_fin: json["fecha_fin"],
+    );
+  }
+  factory RetoModel.fromJson(Map<String, dynamic> json) {
+    return RetoModel(
+      id_reto: int.parse(json["reto"]["id_reto"]),
+      fileid: int.parse(json["reto"]["fileid"]),
+      nivel: int.parse(json["reto"]["nivel"]),
+      nombre: json["reto"]["nombre"],
+      objetivos: json["reto"]["objetivos"],
+      descripcion: json["reto"]["descripcion"],
+      imagen: json["reto"]["imagen"],
+      premio: json["reto"]["premio"],
+      fecha_inicio: json["reto"]["fecha_inicio"],
+      fecha_fin: json["reto"]["fecha_fin"],
+      users: (json["datos"]["usuarios"] as List).map((i) => UserModel.fromJson3(i)).toList(),
+      ganadores: (json["datos"]["ganadores"] as List).map((i) => UserModel.fromJson3(i)).toList(),
     );
   }
 

@@ -24,7 +24,10 @@ class Entrenamiento_Apis {
   });
   var options2 =
   Options(headers: {'Content-type': 'application/json; charset=UTF-8'});
-
+  var options3 = Options(headers: {
+    'Authorization':
+    'key=AAAAhOndpUw:APA91bHO6C6yeNLoa0hOVt9cskZ_6I0MsesP3jsB7g7o-vWxmUr7yMRN4-QQEfNou2fEmxVUTkmNqvU9CXf20MthAF-y2cOmTbGYn2OBqGN4K0xngdax-fGhT-zjk9ifaA3G49UqvTij'
+  });
 
   Future<Entrenamoento_Model> insetEnt(Entrenamoento_Model ent)async{
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
@@ -79,10 +82,6 @@ class Entrenamiento_Apis {
     Response response;
     try {
       response = await dio.post('${uriP}entrenamiento.php?op=insertar_ejercicios_entrenamiento',data: eje.toJson(),options: options2);
-      // ejercicios = (json.decode(response.data) as List)
-      //     .map((data) => Ejercicio_Model.fromJson(data))
-      //     .toList();
-      // return ejercicios;
       print('insertar eje ${response.data}');
       return DiasModel.fromJson(json.decode(response.data)[0]);
 
@@ -132,6 +131,28 @@ class Entrenamiento_Apis {
     }
     return "";
   }
+
+  Future tieneEntUse(int id_user)async{
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    Response response;
+    try {
+      print('${uriP}entrenamiento.php?op=tieneEntUse');
+      response = await dio.post('${uriP}entrenamiento.php?op=tieneEntUse',data: {"id_user":id_user},options: options2);
+      List entrenamientos = [];
+      entrenamientos = (json.decode(response.data) as List).toList();
+      print('el response de tiene ${entrenamientos.length}');
+      return entrenamientos.length;
+    } on DioError catch (e) {
+      print('el error ${e.error}');
+    }
+  }
+
+
   Future<String?> asignatRutina(Entrenamiento_Eje entrenamiento_eje)async{
 
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
@@ -154,6 +175,57 @@ class Entrenamiento_Apis {
       print('el error ${e.error}');
     }
   }
+  Future pushNotification(int id_usuario, token, Entrenamoento_Model entre) async {
+    print('manda la push ');
+    print('el token $id_usuario');
+    var datos = {
+      "to": token,
+      "notification": {
+        "body": entre.nombre_ent,
+        "title": "Te han agregado una rutina",
+        "image": "https://api.pcloud.com/getpubthumb?code=XZ4xYcVZlqyhqu0qXEujbhHJ0tA1pfslrps7&linkpassword=undefined&size=1024x1024&crop=0&type=auto"
+      },
+    };
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    Response response;
+    try {
+      print('https://fcm.googleapis.com/fcm/send');
+      response = await dio.post('https://fcm.googleapis.com/fcm/send',
+          data: json.encode(datos), options: options3);
+      String err = response.data["results"][0]["error"];
+      if(err == "InvalidRegistration" || err == "NotRegistered"){
+        eliminarDispositivo(token);
+      }
+      return response.data;
+    } on DioError catch (e) {
+      print('el error ${e.error}');
+    }
+  }
+
+  Future eliminarDispositivo(token) async {
+    var datos = {"token": token};
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    Response response;
+    try {
+      print('${uriP}reto.php?op=eliminarDispositivo');
+      response = await dio.post('${uriP}reto.php?op=eliminarDispositivo',
+          data: datos, options: options2);
+      print('el response ${response.data}');
+      return response.data;
+    } on DioError catch (e) {
+      print('el error ${e.error}');
+    }
+  }
   Future<List<UserModel>> get_usurios(id_ent) async {
     var datos = {
       "id_ent": id_ent
@@ -168,10 +240,10 @@ class Entrenamiento_Apis {
     Response response;
     try {
       print('${uriP}entrenamiento.php?op=obtner_usuarios');
-      response = await dio.post('${uriP}rutina.php?op=obtner_usuarios',data: datos, options: options2);
+      response = await dio.post('${uriP}entrenamiento.php?op=obtner_usuarios',data: datos, options: options2);
       print('el response ${response.data}');
       users = (json.decode(response.data) as List)
-          .map((data) => UserModel.fromJson(data))
+          .map((data) => UserModel.fromJsonDispositivo(data))
           .toList();
       return users;
     } on DioError catch (e) {

@@ -11,6 +11,7 @@ import 'package:administrador/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Entrenamiento extends StatefulWidget {
   const Entrenamiento({Key? key}) : super(key: key);
@@ -40,15 +41,14 @@ class _EntrenamientoState extends State<Entrenamiento> {
     final ent = Provider.of<provider_entrenamiento>(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         leading: IconButton(
             onPressed: () async {
               await ent.getUser();
-              await Get.offAll(HomeAdmin(
-                user: ent.user!,
-              ));
+              Navigator.pop(context);
             },
             icon: Icon(Icons.arrow_back)),
         title: Text("ENTRENAMIENTO"),
@@ -71,123 +71,103 @@ class _EntrenamientoState extends State<Entrenamiento> {
           }),
       body: ent.loading == true
           ? LoadingAlert("Cargando...")
-          : Container(
-              width: width,
-              height: height,
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Input2(
-                    texto: "Buscar",
-                    onChanged: (value) => ent.buscarP(value),
-                  ),
-                  const SizedBox(height: 10),
-
-                  SizedBox(
-                    height: height/1.4,
-                    child: ListView.builder(
-                      itemBuilder: (context, index) => card(
-                          ent,
-                          ent.entrenamientosBuscar.isEmpty
-                              ? ent.entrenamientos[index]
-                              : ent.entrenamientosBuscar[index]),
-                      itemCount: ent.entrenamientosBuscar.isEmpty
-                          ? ent.entrenamientos.length
-                          : ent.entrenamientosBuscar.length,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-    );
-   }
-
-  Container card(
-      provider_entrenamiento ent, Entrenamoento_Model entrenamiento) {
-    return Container(
-      child: Card(
-        elevation: 5,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          : Stack(
               children: [
-                Image.asset(
-                  "assets/aptitud-fisica.png",
-                  scale: 8,
-                ),
                 Container(
-                  width: MediaQuery.of(context).size.width / 3,
+                  width: width,
+                  height: height,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Nombre de la rutina"),
-                      Text(entrenamiento.nombre_ent!),
+                      const SizedBox(height: 20),
+                      Input2(
+                        texto: "Buscar",
+                        onChanged: (value) => ent.buscarP(value),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: height / 1.4,
+                        child: ListView.builder(
+                          itemBuilder: (context, index) => card(
+                              ent,
+                              ent.entrenamientosBuscar.isEmpty
+                                  ? ent.entrenamientos[index]
+                                  : ent.entrenamientosBuscar[index]),
+                          itemCount: ent.entrenamientosBuscar.isEmpty
+                              ? ent.entrenamientos.length
+                              : ent.entrenamientosBuscar.length,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text("Acciones"),
-                    Row(
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Get.to(Ejercicios_Entrenamoento(
-                                  entrenamiento: entrenamiento));
-                            },
-                            icon: const Icon(
-                              Icons.remove_red_eye,
-                              color: Colors.orange,
-                              size: 25,
-                            )),
-                        IconButton(
-                            onPressed: () {
-                              ent.advertencia(context, entrenamiento.id_ent!);
-                            },
-                            icon: const Icon(
-                              Icons.cancel,
-                              color: Colors.red,
-                              size: 25,
-                            )),
-                      ],
-                    ),
-                  ],
-                )
               ],
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * .01, bottom: 10),
-              child: GestureDetector(
-                onTap: () {
-                  Get.to(Usuarios(
-                    provine: "entrenamiento",
-                    id_ent: entrenamiento.id_ent,
-                    entrenamientos: ent.entrenamientos,
-                  ));
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    BottomGradiant(
-                      colorFinal: const Color.fromRGBO(238, 70, 61, 1),
-                      colorInicial: const Color.fromRGBO(255, 138, 95, 1),
-                      width: MediaQuery.of(context).size.width * .75,
-                      heigth: MediaQuery.of(context).size.height * .04,
+    );
+  }
+
+  Container card(
+      provider_entrenamiento ent, Entrenamoento_Model entrenamiento) {
+
+    return Container(
+      child: GestureDetector(
+        onTap: () {
+          Get.to(Ejercicios_Entrenamoento(entrenamiento: entrenamiento));
+        },
+        child: Card(
+          elevation: 5,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 20),
+                    width: MediaQuery.of(context).size.width / 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(entrenamiento.nombre_ent!.toUpperCase(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                      ],
                     ),
-                    Text(
-                      "Asignar usuario",
-                      style: Theme.of(context).textTheme.headline5!.copyWith(
-                            color: Colors.white,
-                          ),
-                    ),
-                  ],
-                ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text("Acciones"),
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Get.to(Usuarios(
+                                  provine: "entrenamiento",
+                                  id_ent: entrenamiento.id_ent,
+                                  entrenamientos:
+                                  ent.entrenamientos,
+                                  ent: entrenamiento,
+                                ));
+                              },
+                              icon: const Icon(
+                                Icons.person,
+                                color: Color.fromRGBO(6, 19, 249, 1),
+                                size: 25,
+                              )),
+                          IconButton(
+                              onPressed: () {
+                                ent.advertencia(context, entrenamiento.id_ent!);
+                              },
+                              icon: const Icon(
+                                Icons.cancel,
+                                color: Colors.black,
+                                size: 25,
+                              )),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

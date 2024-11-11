@@ -219,7 +219,27 @@ class provider_reto with ChangeNotifier {
       ],
     ).show();
   }
-
+  error(
+      context) async {
+    await Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Advertencia",
+      desc: "Se debe seleccionar un ganador como min.",
+      buttons: [
+        DialogButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          width: 120,
+          child: const Text(
+            "Aceptar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+      ],
+    ).show();
+  }
   getUsuarios(id_reto) async {
     isCargando = true;
     await retoApis.getusuarioxreto(id_reto).then((List<UserModel> listUser) {
@@ -276,5 +296,17 @@ class provider_reto with ChangeNotifier {
       addPerson = false;
     }
     notifyListeners();
+  }
+
+  selecGandor(Iterable<UserModel> users, id_reto,context)async{
+    int cont =0;
+    for (UserModel user in users) {
+      await retoApis.asignarGanador(id_reto, user.idU);
+      cont ++;
+      if(users.length == cont){
+        message(context, "Se han registrado los ganadores");
+      }
+
+    }
   }
 }

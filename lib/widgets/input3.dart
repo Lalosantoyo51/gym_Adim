@@ -85,6 +85,7 @@ class _Input3 extends State<Input3> {
             ],
           ),
           child: TextField(
+
             keyboardType: widget.isNumber == true ?TextInputType.number:TextInputType.text,
             enabled: widget.editable,
             controller: inputController,

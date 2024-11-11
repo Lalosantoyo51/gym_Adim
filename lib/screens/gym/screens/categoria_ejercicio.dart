@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:administrador/screens/gym/models/categoria_eje.dart';
 import 'package:administrador/screens/gym/providers/provider_categorias.dart';
@@ -100,13 +101,14 @@ class _Categoria_ejercicioState extends State<Categoria_ejercicio> {
                                           ? cat_eje_provider.categorias.length
                                           : cat_eje_provider
                                               .categoriasBuscar.length,
-                                  itemBuilder: (context, index) =>
-                                      cardCategoria(
-                                          height,
-                                          width,
-                                          cat_eje_provider.categoriasBuscar.isEmpty
-                                              ?cat_eje_provider.categorias[index]:cat_eje_provider.categoriasBuscar[index],
-                                          cat_eje_provider),
+                                  itemBuilder: (context, index) => newCard(
+                                      height,
+                                      width,
+                                      cat_eje_provider.categoriasBuscar.isEmpty
+                                          ? cat_eje_provider.categorias[index]
+                                          : cat_eje_provider
+                                              .categoriasBuscar[index],
+                                      cat_eje_provider),
                                 ),
                               ),
                             ],
@@ -194,7 +196,7 @@ class _Categoria_ejercicioState extends State<Categoria_ejercicio> {
                                     icon: const Icon(
                                       Icons.cancel,
                                       size: 40,
-                                      color: Colors.red,
+                                      color: Colors.black,
                                     )))
                           ],
                         ))
@@ -222,7 +224,7 @@ class _Categoria_ejercicioState extends State<Categoria_ejercicio> {
                                             icon: const Icon(
                                               Icons.cancel,
                                               size: 40,
-                                              color: Colors.red,
+                                              color: Colors.black,
                                             )))
                                   ],
                                 )),
@@ -280,8 +282,8 @@ class _Categoria_ejercicioState extends State<Categoria_ejercicio> {
                     children: [
                       Positioned(
                         child: BottomGradiant(
-                          colorFinal: const Color.fromRGBO(238, 70, 61, 1),
-                          colorInicial: const Color.fromRGBO(255, 138, 95, 1),
+                          colorFinal: const Color.fromRGBO(0, 0, 0, 1),
+                          colorInicial: const Color.fromRGBO(0, 0, 0, 1),
                           width: width * .65,
                           heigth: height * .050,
                         ),
@@ -307,82 +309,70 @@ class _Categoria_ejercicioState extends State<Categoria_ejercicio> {
     );
   }
 
-  Container cardCategoria(
+  Card newCard(
       double height, double width, Categoria_eje cat, cat_eje_provider) {
-    return Container(
-        padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
-        child: Card(
+    return Card(
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider<provider_cat_eje>(
+                        create: (_) => provider_cat_eje()),
+                    ChangeNotifierProvider<provider_ejercicios>(
+                        create: (_) => provider_ejercicios()),
+                  ],
+                  builder: (context, child) => Ejercicio(
+                      categoria_eje: cat,
+                      proviene: widget.proviene,
+                      id_rutina: widget.id_rutina),
+                ),
+              ));
+            },
             child: Container(
-                child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: SizedBox(
-                  height: height * .13,
-                  width: width * .17,
-                  child: Image.network(cat.imagen),
+              height: 150,
+              padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(cat.imagen),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.3),
+                      BlendMode.darken
+                  ),
                 ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(cat.nombre!),
-              ],
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              cat.nombre.toUpperCase(),
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text("Acciones"),
-                Row(
-                  children: [
-                    if (widget.proviene == "home")
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.edit,
-                            color: Colors.orange,
-                            size: 25,
-                          )),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) => MultiProvider(
-                              providers: [
-                                ChangeNotifierProvider<provider_cat_eje>(
-                                    create: (_) => provider_cat_eje()),
-                                ChangeNotifierProvider<provider_ejercicios>(
-                                    create: (_) => provider_ejercicios()),
-                              ],
-                              builder: (context, child) => Ejercicio(
-                                  categoria_eje: cat,
-                                  proviene: widget.proviene,
-                                  id_rutina: widget.id_rutina),
-                            ),
-                          ));
-                        },
-                        icon: const Icon(
-                          Icons.remove_red_eye_outlined,
-                          color: Colors.orange,
-                          size: 25,
-                        )),
-                    if (widget.proviene == "home")
-                      IconButton(
-                          onPressed: () => cat_eje_provider.advertencia(
-                              context, cat.id_cat_eje, cat.fileid),
-                          icon: const Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                            size: 25,
-                          )),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ))));
+          ),
+          if (widget.proviene == "home")
+            Positioned(
+              right: 0,
+              top: 8,
+              child: IconButton(
+                  onPressed: () => cat_eje_provider.advertencia(
+                      context, cat.id_cat_eje, cat.fileid),
+                  icon: const Icon(
+                    Icons.cancel,
+                    color: Colors.white,
+                    size: 35,
+                  )),
+            )
+        ],
+      ),
+    );
   }
+
 }

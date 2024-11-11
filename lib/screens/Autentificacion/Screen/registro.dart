@@ -35,9 +35,11 @@ class _RegistroState extends State<Registro> {
   ];
   final List roles = [
     {"nombre": "Rol", "id": 0},
-    {"nombre": "Administrador", "id": 3},
+    {"nombre": "Recepcionista", "id": 3},
     {"nombre": "Instructor", "id": 4},
     {"nombre": "Nutriologo", "id": 5},
+    {"nombre": "preparador físico", "id": 6},
+
   ];
   int select = 0;
   int select2 = 0;
@@ -245,8 +247,8 @@ class _RegistroState extends State<Registro> {
                   alignment: Alignment.center,
                   children: [
                     BottomGradiant(
-                      colorFinal: const Color.fromRGBO(238, 70, 61, 1),
-                      colorInicial: const Color.fromRGBO(255, 138, 95, 1),
+                      colorFinal: const Color.fromRGBO(0, 0, 0, 1),
+                      colorInicial: const Color.fromRGBO(0, 0, 0, 1),
                       width: width * .75,
                       heigth: height * .07,
                     ),
@@ -277,7 +279,7 @@ class _RegistroState extends State<Registro> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(15.0),
             border: Border.all(
-                color: Color.fromRGBO(255, 138, 95, 1),
+                color: Color.fromRGBO(0, 0, 0, 1),
                 style: BorderStyle.solid,
                 width: 0.80),
           ),
@@ -292,7 +294,7 @@ class _RegistroState extends State<Registro> {
                             value['nombre'],
                             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                 color: select == 0 && provine == 1 || select2 ==0 && provine ==2
-                                    ? const Color.fromRGBO(255, 138, 95, 1)
+                                    ? const Color.fromRGBO(0, 0, 0, 1)
                                     : Colors.black),
                           )),
                     ))

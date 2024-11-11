@@ -106,7 +106,7 @@ class RetoApis {
       response = await dio.post('${uriP}reto.php?op=insert_reto',
           data: reto.toJson(), options: options2);
       print('el response ${response.data}');
-      return RetoModel.fromJson(json.decode(response.data)[0]);
+      return RetoModel.fromJson2(json.decode(response.data)[0]);
     } on DioError catch (e) {
       print('el error ${e.error}');
     }
@@ -131,7 +131,7 @@ class RetoApis {
           options: options2);
       print('el response ${response.data}');
       listReto = (json.decode(response.data) as List)
-          .map((data) => RetoModel.fromJson(data))
+          .map((data) => RetoModel.fromJson2(data))
           .toList();
       return listReto;
     } on DioError catch (e) {
@@ -152,9 +152,9 @@ class RetoApis {
     Response response;
     try {
       DateTime date = DateTime.now();
-      print('${uriP}reto.php?op=historial');
-      response = await dio.post('${uriP}reto.php?op=historial',
-          data: {"fecha_fin": "${date.year}-${date.month}-${date.day}"},
+      print('${uriP}reto.php?op=get_historialUser');
+      response = await dio.post('${uriP}reto.php?op=get_historialUser',
+          data: {"fecha_inicio": "${date.year}-${date.month}-${date.day}"},
           options: options2);
       print('el response ${response.data}');
       listReto = (json.decode(response.data) as List)
@@ -286,7 +286,7 @@ class RetoApis {
       response = await dio.post('https://fcm.googleapis.com/fcm/send',
           data: json.encode(datos), options: options3);
       String err = response.data["results"][0]["error"];
-      if(err == "InvalidRegistration"){
+      if(err == "InvalidRegistration" || err == "NotRegistered"){
         eliminarDispositivo(token);
       }
       return response.data;
@@ -294,6 +294,7 @@ class RetoApis {
       print('el error ${e.error}');
     }
   }
+
 
   Future asignarUsu(id_reto, id_usuario, asignadox) async {
     var datos = {
@@ -358,4 +359,25 @@ class RetoApis {
       print('el error ${e.error}');
     }
   }
+  asignarGanador(id_reto, id_usuario,)async{
+    var datos = {
+      "id_reto": id_reto,
+      "id_usuario": id_usuario,
+    };
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    Response response;
+    try {
+      print('${uriP}reto.php?op=asignarGanador');
+      response = await dio.post('${uriP}reto.php?op=asignarGanador',
+          data: datos, options: options2);
+      print('el response ${response.data}');
+      return response.data;
+    } on DioError catch (e) {
+      print('el error ${e.error}');
+    }  }
 }

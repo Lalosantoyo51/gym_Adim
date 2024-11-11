@@ -196,6 +196,7 @@ class provider_rutina with ChangeNotifier {
       desc: "Estas seguro de eliminar el registro?",
       buttons: [
         DialogButton(
+          color: Colors.black,
           child: Text(
             "Cancelar",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -206,7 +207,7 @@ class provider_rutina with ChangeNotifier {
           width: 120,
         ),
         DialogButton(
-          color: Colors.red,
+          color: Color.fromRGBO(6, 19, 249, 1),
           child: Text(
             "Aceptar",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -253,6 +254,7 @@ class provider_rutina with ChangeNotifier {
       ),
       buttons: [
         DialogButton(
+          color: Colors.black,
           child: Text(
             "Cancelar",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -263,7 +265,7 @@ class provider_rutina with ChangeNotifier {
           width: 120,
         ),
         DialogButton(
-          color: Colors.red,
+          color: Color.fromRGBO(6, 19, 249, 1),
           child: Text(
             "Aceptar",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -400,9 +402,44 @@ class provider_rutina with ChangeNotifier {
       ],
     ).show();
   }
-
+  advertencia4(context) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Advertencia",
+      desc: "Tu tipo de serie es $selectedValue",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Aceptar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          width: 120,
+        ),
+      ],
+    ).show();
+  }
+  veririficar(id_rutina,context){
+    if(selectedValue=="Serie recta" &&ejercicios.length ==1){
+      insertRutina(id_rutina, context);
+    }else if(selectedValue=="Biserie" &&ejercicios.length ==2){
+      insertRutina(id_rutina, context);
+    }else if(selectedValue=="Triserie" &&ejercicios.length ==3){
+      insertRutina(id_rutina, context);
+    }else if(selectedValue=="Circuito" &&ejercicios.length >3){
+      insertRutina(id_rutina, context);
+    }else if(selectedValue=="Super Series" &&ejercicios.length >3){
+      insertRutina(id_rutina, context);
+    }else{
+      advertencia4(context);
+    }
+  }
 
   addEjercicio(context,Ejercicio_Model eje,id_rutina)async{
+    print('selec $selectedValue');
     print('eje ${eje.id_ejercicio}');
     await getUser();
 

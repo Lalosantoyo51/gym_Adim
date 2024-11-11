@@ -4,6 +4,7 @@ import 'package:administrador/screens/gym/providers/provider_ejercicios.dart';
 import 'package:administrador/screens/gym/providers/provider_rutina.dart';
 import 'package:administrador/screens/gym/screens/categoria_ejercicio.dart';
 import 'package:administrador/screens/gym/screens/ejercicio_rutina.dart';
+import 'package:administrador/screens/gym/screens/perfil/Profile.dart';
 import 'package:administrador/screens/gym/screens/usuarios.dart';
 import 'package:administrador/widgets/bottom_gradiant.dart';
 import 'package:administrador/widgets/input2.dart';
@@ -51,9 +52,7 @@ class _RutinaState extends State<Rutina> {
         appBar: AppBar(
             leading: IconButton(
                 onPressed: () {
-                  Get.offAll(HomeAdmin(
-                    user: rutina.user!,
-                  ));
+                  Navigator.of(context).pop();
                 },
                 icon: const Icon(Icons.arrow_back)),
             title: const Text("Rutinas"),
@@ -106,69 +105,61 @@ class _RutinaState extends State<Rutina> {
   Padding cardInfo(provider_rutina rutinap, Rutina_Model rutina) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Card(
-        elevation: 5,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Image.asset(
-                  "assets/aptitud-fisica.png",
-                  scale: 8,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("Nombre de la rutina"),
-                      Text(rutina.nombre!),
-                    ],
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text("Acciones"),
-                    Row(
+      child: GestureDetector(
+        onTap: (){
+          Get.to(Ejercicio_Rutina(
+            id_rutina: rutina.id_rutina!,
+          ));
+        },
+        child: Card(
+          elevation: 5,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 20),
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        IconButton(
-                            onPressed: () {
-                              Get.to(Ejercicio_Rutina(
-                                id_rutina: rutina.id_rutina!,
-                              ));
-                            },
-                            icon: const Icon(
-                              Icons.remove_red_eye,
-                              color: Colors.orange,
-                              size: 25,
-                            )),
-                        IconButton(
-                            onPressed: () {
-                              rutinap.agregarSerie(context, rutina.id_rutina);
-                            },
-                            icon: const Icon(
-                              Icons.add_circle,
-                              color: Colors.green,
-                              size: 25,
-                            )),
-                        IconButton(
-                            onPressed: () {
-                              rutinap.advertencia(context, rutina.id_rutina!);
-                            },
-                            icon: const Icon(
-                              Icons.cancel,
-                              color: Colors.red,
-                              size: 25,
-                            )),
+                        Text(rutina.nombre!.toUpperCase(),style: TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
-                  ],
-                )
-              ],
-            ),
-          ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text("Acciones"),
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                rutinap.agregarSerie(context, rutina.id_rutina);
+                              },
+                              icon: const Icon(
+                                Icons.add_circle,
+                                color: Color.fromRGBO(6, 19, 249, 1),
+                                size: 25,
+                              )),
+                          IconButton(
+                              onPressed: () {
+                                rutinap.advertencia(context, rutina.id_rutina!);
+                              },
+                              icon: const Icon(
+                                Icons.cancel,
+                                color: Colors.black,
+                                size: 25,
+                              )),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

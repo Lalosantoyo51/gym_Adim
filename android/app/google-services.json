@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "570859300172",
+    "project_id": "gymnutricion-d70a8",
+    "storage_bucket": "gymnutricion-d70a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570859300172:android:3b0486067b96a929a85be9",
+        "android_client_info": {
+          "package_name": "com.example.gym_nutricion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "570859300172-e2ohl3hu39rd5g81l08mbnjb4dk65bi9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMYWkFGdHIK9NZMC_Lnsx2iKA_yxrZN0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "570859300172-e2ohl3hu39rd5g81l08mbnjb4dk65bi9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "570859300172-aa364sj814eai5655bjbot3sbunehvht.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gymNutricion2"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570859300172:android:8b89e98a08cfe649a85be9",
+        "android_client_info": {
+          "package_name": "com.gym.administrador"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "570859300172-e2ohl3hu39rd5g81l08mbnjb4dk65bi9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMYWkFGdHIK9NZMC_Lnsx2iKA_yxrZN0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "570859300172-e2ohl3hu39rd5g81l08mbnjb4dk65bi9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "570859300172-aa364sj814eai5655bjbot3sbunehvht.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gymNutricion2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

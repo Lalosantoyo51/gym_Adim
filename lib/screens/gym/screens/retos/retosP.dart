@@ -3,6 +3,7 @@ import 'package:administrador/screens/gym/providers/provider_reto.dart';
 import 'package:administrador/screens/gym/providers/provider_rutina.dart';
 import 'package:administrador/screens/gym/screens/home.dart';
 import 'package:administrador/screens/gym/screens/retos/retoEditar.dart';
+import 'package:administrador/screens/gym/screens/retos/retos_detalle.dart';
 import 'package:administrador/screens/gym/screens/retos/usuarios.dart';
 import 'package:administrador/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +54,7 @@ class _RetosPState extends State<RetosP> {
               leading: IconButton(
                   onPressed: () async {
                     await rutina.getUser();
-                    await Get.offAll(HomeAdmin(
-                      user: rutina.user!,
-                    ));
+                    Navigator.pop(context);
                   },
                   icon: const Icon(Icons.arrow_back)),
               title: const Text("Retos"),
@@ -129,79 +128,77 @@ class _RetosPState extends State<RetosP> {
       double height, double width, RetoModel reto, provider_reto retos,String proviene) {
     return Container(
         padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
-        child: Card(
-            child: Container(
-                child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: SizedBox(
-                  height: height * .13,
-                  width: width * .17,
-                  child: Image.network(reto.imagen!),
+        child: GestureDetector(
+          onTap: (){
+            Get.to( RetosDetalle(reto: reto, regis: 1));
+          },
+          child: Card(
+              child: Container(
+                  child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: SizedBox(
+                    height: height * .13,
+                    width: width * .17,
+                    child: Image.network(reto.imagen!),
+                  ),
                 ),
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(reto.nombre!),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text("Acciones"),
-                proviene == "act"?
-                Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Get.to(RetoEditar(retoModel: reto));
-                        },
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Colors.orange,
-                          size: 25,
-                        )),
-                    IconButton(
-                        onPressed: () {
-                          Get.to( usuariosReto(retoModel: reto,));
-                          retos.userDisponibles.clear();
-                          retos.userRetos.clear();
-                          retos.addPerson = false;
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.green,
-                          size: 25,
-                        )),
-                    IconButton(
-                        onPressed: () {
-                          retos.advertencia(
-                              context, reto.id_reto!, reto.fileid!,"reto");
-                        },
-                        icon: const Icon(
-                          Icons.cancel,
-                          color: Colors.red,
-                          size: 25,
-                        )),
-                  ],
-                ):  IconButton(
-                    onPressed: () {
-                     // Get.to( usuariosReto());
-                    },
-                    icon: const Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.green,
-                      size: 25,
-                    )),
-              ],
-            ),
-          ],
-        ))));
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(reto.nombre!.toUpperCase()),
+                ],
+              ),
+              proviene == "act"?
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text("Acciones"),
+
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Get.to(RetoEditar(retoModel: reto));
+                          },
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Color.fromRGBO(6, 19, 249, 1),
+                            size: 25,
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            Get.to( usuariosReto(retoModel: reto,proviene: 1,));
+                            retos.userDisponibles.clear();
+                            retos.userRetos.clear();
+                            retos.addPerson = false;
+                          },
+                          icon: const Icon(
+                            Icons.person_add,
+                            color: Color.fromRGBO(60, 180, 229, 1),
+                            size: 25,
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            retos.advertencia(
+                                context, reto.id_reto!, reto.fileid!,"reto");
+                          },
+                          icon: const Icon(
+                            Icons.cancel,
+                            color: Colors.black,
+                            size: 25,
+                          )),
+                    ],
+                  ) ,
+                ],
+              ):Container(),
+            ],
+          ))),
+        ));
   }
 }

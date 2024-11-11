@@ -16,6 +16,8 @@ class Entrenamiento_Eje{
   late String? musculos_trabajados;
   late String? instrucciones;
   late String? fileid;
+  late String? fecha_inicio;
+  late String? fecha_fin;
 
 
   Entrenamiento_Eje({
@@ -35,7 +37,9 @@ class Entrenamiento_Eje{
     this.musculos_trabajados,
     this.instrucciones,
     this.fileid,
-    this.nombre
+    this.nombre,
+    this.fecha_inicio,
+    this.fecha_fin,
   });
 
 
@@ -76,6 +80,8 @@ class Entrenamiento_Eje{
     "serie": serie,
     "repeticion": repeticion,
     "asignado_a": asignado_a,
-    "num_dia": num_dia
+    "num_dia": num_dia,
+    "fecha_inicio":fecha_inicio,
+    "fecha_fin":fecha_fin
   };
 }

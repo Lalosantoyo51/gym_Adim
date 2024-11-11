@@ -10,6 +10,7 @@ import 'package:administrador/screens/gym/models/entrenamiento_model.dart';
 import 'package:administrador/screens/gym/models/rutina_ejercicio_model.dart';
 import 'package:administrador/screens/gym/models/serie.dart';
 import 'package:administrador/screens/gym/screens/entrenamientos.dart';
+import 'package:administrador/screens/gym/screens/usuarios.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,8 +21,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class provider_entrenamiento with ChangeNotifier {
   Entrenamiento_Apis ent_api = Entrenamiento_Apis();
-  List<AsistenciaModel> asitencias =[];
-  int selectAsistencia  = 0;
+  List<AsistenciaModel> asitencias = [];
+  int selectAsistencia = 0;
   bool loading = false;
 
   TextEditingController nombre_entrenamiento = TextEditingController();
@@ -34,6 +35,7 @@ class provider_entrenamiento with ChangeNotifier {
     DiasModel(dia: "Sabado", enable: false, series: []),
     DiasModel(dia: "Domingo", enable: false, series: []),
   ];
+
   List<Entrenamoento_Model> entrenamientos = [];
   List<Entrenamoento_Model> entrenamientosBuscar = [];
   List<Entrenamoento_Model> entrenamientosVista = [];
@@ -61,8 +63,8 @@ class provider_entrenamiento with ChangeNotifier {
   bool showUser = false;
   final DateFormat formatter = DateFormat('dd-MMMM-yyyy', "es");
   final DateFormat horaFormatter = DateFormat('HH:mm', "es");
-  late DateTime inicio = DateTime(1995);
-  late DateTime fin = DateTime(1995);
+  late DateTime inicio = DateTime.now();
+  late DateTime fin = DateTime.now();
 
   getEjerciciosRutina(int id_rutina, i) async {
     print('el id ${id_rutina}, i $i');
@@ -89,12 +91,12 @@ class provider_entrenamiento with ChangeNotifier {
       locale: const Locale('es'),
       backgroundColor: Colors.black87,
       context: context,
-      firstDate: DateTime(DateTime.now().year - 2),
+      firstDate: DateTime.now(),
       initialDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 2),
     );
-    if(date.isNull){
-    }else{
+    if (date.isNull) {
+    } else {
       inicio = date;
       notifyListeners();
     }
@@ -105,12 +107,12 @@ class provider_entrenamiento with ChangeNotifier {
       locale: const Locale('es'),
       backgroundColor: Colors.black87,
       context: context,
-      firstDate: DateTime(DateTime.now().year - 2),
+      firstDate: DateTime.now(),
       initialDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year + 2),
     );
-    if(date.isNull){
-    }else{
+    if (date.isNull) {
+    } else {
       fin = date;
       notifyListeners();
     }
@@ -123,13 +125,11 @@ class provider_entrenamiento with ChangeNotifier {
       case 0:
         if (step == 0 &&
             nombre_entrenamiento.text.isNotEmpty &&
-            fin.year != 1995 &&
-            inicio.year != 1995 &&
             dias.indexWhere((element) => element.enable == true) == 0) {
           step++;
         } else {
           advetencia2(context,
-              "Se debe llenar todos los campos, y se debe seleccionar 1 dia minimo");
+              "Se debe llenar todos los campos");
         }
         break;
       case 1:
@@ -342,6 +342,8 @@ class provider_entrenamiento with ChangeNotifier {
                   id_ejercicio: eje.id_ejercicio!,
                   serie: eje.series!,
                   repeticion: eje.repeticiones.toString(),
+                  fecha_fin: "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
+                  fecha_inicio: "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
                   asignado_a: user!.idU));
             }
           }
@@ -364,8 +366,8 @@ class provider_entrenamiento with ChangeNotifier {
     nombre_entrenamiento.clear();
     entrenamientosVista = [];
     entrenamientos = [];
-    inicio = DateTime(1995);
-    fin = DateTime(1995);
+    inicio = DateTime.now();
+    fin = DateTime.now();
     step = 0;
     selectLunes = "0";
     selectMartes = "0";
@@ -386,13 +388,36 @@ class provider_entrenamiento with ChangeNotifier {
   }
 
   onchangeS(value, index, index2, dia) {
-    dias[dia].series![index].ejercicios![index2].series = value;
-    notifyListeners();
+    print('el index 1 $index y el index2 $index2');
+    if (index == 0) {
+      dias.forEach((dia) {
+        dia.series!.forEach((serie) {
+          serie.ejercicios!.forEach((ejercicios) {
+            ejercicios.series = value;
+            notifyListeners();
+          });
+        });
+      });
+    } else {
+      dias[dia].series![index].ejercicios![index2].series = value;
+      notifyListeners();
+    }
   }
 
   onchangeR(String value, dia, {index, index2}) {
-    dias[dia].series![index].ejercicios![index2].repeticiones =
-        int.parse(value);
+    if (index2 == 0) {
+      dias.forEach((dia) {
+        dia.series!.forEach((serie) {
+          serie.ejercicios!.forEach((ejercicios) {
+            ejercicios.repeticiones = int.parse(value);
+            notifyListeners();
+          });
+        });
+      });
+    } else {
+      dias[dia].series![index].ejercicios![index2].repeticiones =
+          int.parse(value);
+    }
     notifyListeners();
   }
 
@@ -411,6 +436,44 @@ class provider_entrenamiento with ChangeNotifier {
       });
       loading = false;
       entrenamientos = entrena;
+      entrenamientos.forEach((element) {
+        print(
+            'existe ${element.dias!.indexWhere((element) => element.num_dia == 2)}');
+        var lunes = element.dias!.indexWhere((element) => element.num_dia == 0);
+        var martes =
+            element.dias!.indexWhere((element) => element.num_dia == 1);
+        var miercoles =
+            element.dias!.indexWhere((element) => element.num_dia == 2);
+        var jueves =
+            element.dias!.indexWhere((element) => element.num_dia == 3);
+        var viernes =
+            element.dias!.indexWhere((element) => element.num_dia == 4);
+        var sabado =
+            element.dias!.indexWhere((element) => element.num_dia == 5);
+        var domingo =
+            element.dias!.indexWhere((element) => element.num_dia == 6);
+        if (lunes == -1) {
+          element.dias!.add(DiasModel(dia: "0", series: [], num_dia: 0));
+        }
+        if (martes == -1) {
+          element.dias!.add(DiasModel(dia: "1", series: [], num_dia: 1));
+        }
+        if (miercoles == -1) {
+          element.dias!.add(DiasModel(dia: "2", series: [], num_dia: 2));
+        }
+        if (jueves == -1) {
+          element.dias!.add(DiasModel(dia: "3", series: [], num_dia: 3));
+        }
+        if (viernes == -1) {
+          element.dias!.add(DiasModel(dia: "4", series: [], num_dia: 4));
+        }
+        if (sabado == -1) {
+          element.dias!.add(DiasModel(dia: "5", series: [], num_dia: 5));
+        }
+        if (domingo == -1) {
+          element.dias!.add(DiasModel(dia: "6", series: [], num_dia: 6));
+        }
+      });
       notifyListeners();
     });
   }
@@ -427,6 +490,7 @@ class provider_entrenamiento with ChangeNotifier {
       desc: "¿Estas seguro de eliminar el registro?",
       buttons: [
         DialogButton(
+          color: Colors.black,
           child: Text(
             "Cancelar",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -437,7 +501,7 @@ class provider_entrenamiento with ChangeNotifier {
           width: 120,
         ),
         DialogButton(
-          color: Colors.red,
+          color: Color.fromRGBO(6, 19, 249, 1),
           child: Text(
             "Aceptar",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -451,6 +515,7 @@ class provider_entrenamiento with ChangeNotifier {
       ],
     ).show();
   }
+
 
   succesInsert(context) async {
     await Alert(
@@ -473,6 +538,27 @@ class provider_entrenamiento with ChangeNotifier {
       ],
     ).show();
   }
+  yaTieneUsuario(context) async {
+    await Alert(
+      context: context,
+      type: AlertType.error,
+      title: "Error",
+      desc: "Este usuario ya cuenta con un entrenamiento",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Aceptar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            limpiarForm();
+            Navigator.pop(context);
+          },
+          width: 120,
+        ),
+      ],
+    ).show();
+  }
 
   advetencia2(context, String message) async {
     await Alert(
@@ -482,6 +568,7 @@ class provider_entrenamiento with ChangeNotifier {
       desc: message,
       buttons: [
         DialogButton(
+          color: Color.fromRGBO(6, 19, 249, 1),
           child: Text(
             "Aceptar",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -495,14 +582,13 @@ class provider_entrenamiento with ChangeNotifier {
     ).show();
   }
 
-  Future existe_el_ususrio(
-      context, asignado_a, id_ent, tipo_usuario,List<Entrenamoento_Model>? list) async {
+  Future existe_el_ususrio(context, asignado_a, id_ent, tipo_usuario,
+      List<Entrenamoento_Model>? list,UserModel user, Entrenamoento_Model ent) async {
     Entrenamiento_Apis api_ent = Entrenamiento_Apis();
-    api_ent.existe_el_ususrio(asignado_a,id_ent).then((value) {
+    api_ent.existe_el_ususrio(asignado_a, id_ent).then((value) {
       if (value == "succes") {
-
-        asignarUsuario(id_ent, asignado_a, tipo_usuario,list)
-            .then((value) => succes2(context));
+        asignarUsuario(id_ent, asignado_a, tipo_usuario, list)
+            .then((value) => succes2(context, user, ent));
       } else {
         advertencia2(context);
       }
@@ -510,15 +596,23 @@ class provider_entrenamiento with ChangeNotifier {
     notifyListeners();
   }
 
-  Future asignarUsuario(id_ent, id_usuario, tipo_usuario,List<Entrenamoento_Model>? list) async {
+
+  Future tieneEntUse(int id_user)async{
+    return ent_api.tieneEntUse(id_user);
+  }
+
+  Future asignarUsuario(
+      id_ent, id_usuario, tipo_usuario, List<Entrenamoento_Model>? list) async {
     print('Asignar user');
     int cont = 0;
 
-    list!.where((element) => element.id_ent == id_ent).forEach((element2)async {
+    list!
+        .where((element) => element.id_ent == id_ent)
+        .forEach((element2) async {
       print('nombre ${element2.nombre_ent}');
       element2.dias!.forEach((dia) {
         dia!.series!.forEach((se) {
-          se.ejercicios!.forEach((eje)async {
+          se.ejercicios!.forEach((eje) async {
             await ent_api.asignatRutina(Entrenamiento_Eje(
                 id_ent: id_ent,
                 asignado_a: id_usuario,
@@ -530,15 +624,17 @@ class provider_entrenamiento with ChangeNotifier {
                 repeticion: "${eje.repeticiones!}",
                 serie: "${eje.series}",
                 nombre: eje.nombre!,
+                fecha_fin: "${fin.year}-${fin.month}-${fin.day}",
+                fecha_inicio: "${inicio.year}-${inicio.month}-${inicio.day}",
                 instrucciones: eje.instrucciones));
+            //await ent_api.pushNotification(id_usuario, token, element2)
           });
         });
       });
     });
-
   }
 
-  succes2(context) {
+  succes2(context, UserModel user, Entrenamoento_Model ent) {
     Alert(
       context: context,
       type: AlertType.success,
@@ -551,6 +647,10 @@ class provider_entrenamiento with ChangeNotifier {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () {
+            user.dispositivos!.forEach((element) {
+              ent_api.pushNotification(user.idU, element.token,ent!);
+            });
+            limpiarForm();
             Navigator.pop(context);
           },
           width: 120,
@@ -572,6 +672,7 @@ class provider_entrenamiento with ChangeNotifier {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () {
+            limpiarForm();
             Navigator.of(context).pop();
           },
           width: 120,
@@ -579,44 +680,47 @@ class provider_entrenamiento with ChangeNotifier {
       ],
     ).show();
   }
-  Future eliminar_rutina_usuario(asignado_a,id_ent,List<Entrenamoento_Model>? list) async {
 
-    list!.where((element) => element.id_ent == id_ent).forEach((element2)async {
+  Future eliminar_rutina_usuario(
+      asignado_a, id_ent, List<Entrenamoento_Model>? list) async {
+    list!
+        .where((element) => element.id_ent == id_ent)
+        .forEach((element2) async {
       print('nombre ${element2.nombre_ent}');
       element2.dias!.forEach((dia) {
         dia!.series!.forEach((se) {
-          se.ejercicios!.forEach((eje)async {
-            await ent_api.
-                eliminar_rutina_usuario(asignado_a,eje.id_rutina, id_ent)
+          se.ejercicios!.forEach((eje) async {
+            await ent_api
+                .eliminar_rutina_usuario(asignado_a, eje.id_rutina, id_ent)
                 .then((value) => getUser());
           });
         });
       });
     });
-
   }
 
-  getAsistencia(){
+  getAsistencia() {
     ent_api.getAsistencia().then((List<AsistenciaModel> listAsistencia) {
       asitencias = listAsistencia;
       notifyListeners();
     });
   }
 
-  mostrarInfo(){
-    if(showUser) {
-      showUser=false;
-    }else{
-      showUser=true;
+  mostrarInfo() {
+    if (showUser) {
+      showUser = false;
+    } else {
+      showUser = true;
     }
     notifyListeners();
   }
 
-  buscarP(String bu){
-    final bus = entrenamientos.cast<Entrenamoento_Model>().where((element) => element.nombre_ent!.toUpperCase().contains(bu.toUpperCase()));
-    if(bus.isEmpty){
+  buscarP(String bu) {
+    final bus = entrenamientos.cast<Entrenamoento_Model>().where((element) =>
+        element.nombre_ent!.toUpperCase().contains(bu.toUpperCase()));
+    if (bus.isEmpty) {
       entrenamientosBuscar = [];
-    }else{
+    } else {
       entrenamientosBuscar = [];
       bus.forEach((Entrenamoento_Model ent) {
         entrenamientosBuscar.add(ent);
@@ -624,5 +728,7 @@ class provider_entrenamiento with ChangeNotifier {
     }
     notifyListeners();
   }
-
+  mandarPush(id_usuario,token,Entrenamoento_Model entre){
+    ent_api.pushNotification(id_usuario, token, entre);
+  }
 }

@@ -61,6 +61,7 @@ class provider_cat_eje with ChangeNotifier {
       desc: "Estas seguro de eliminar el registro?",
       buttons: [
         DialogButton(
+          color: Color.fromRGBO(6, 19, 249, 1),
           child: Text(
             "Cancelar",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -71,7 +72,7 @@ class provider_cat_eje with ChangeNotifier {
           width: 120,
         ),
         DialogButton(
-          color: Colors.red,
+          color: Colors.black,
           child: Text(
             "Aceptar",
             style: TextStyle(color: Colors.white, fontSize: 20),

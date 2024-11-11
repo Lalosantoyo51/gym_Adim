@@ -23,13 +23,13 @@ class Create_Entrenamiento extends StatefulWidget {
 class _EntrenamientoState extends State<Create_Entrenamiento> {
   String selectedValue = "0";
   int _currentValueDescanzo = 3;
-  int _currentValueCardio= 3;
+  int _currentValueCardio = 3;
   String selectMinSecDescanzo = "Min";
   String selectMinSecCardio = "Min";
   List<DropdownMenuItem<String>> dropdownItems = [
     const DropdownMenuItem(value: "0", child: Text("Selecciona una rutina"))
   ];
-List<DropdownMenuItem<String>> minSec = [
+  List<DropdownMenuItem<String>> minSec = [
     const DropdownMenuItem(value: "Min", child: Text("Min")),
     const DropdownMenuItem(value: "Sec", child: Text("Sec"))
   ];
@@ -85,83 +85,120 @@ List<DropdownMenuItem<String>> minSec = [
                             ? Step1(ent, context, width)
                             : ent.step == 1
                                 ? step2(ent)
-                                :ent.step == 2? step3(ent, width, height):
-                        Column(
-                          children: [
-                            const Text("Datos Generales",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
-                            const SizedBox(height: 20),
-                            const Text("Descanzo entre series",style: TextStyle(fontSize: 25),),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                NumberPicker(
-                                  value: _currentValueDescanzo,
-                                  minValue: 1,
-                                  maxValue: 60,
-                                  onChanged: (value){
-                                    _currentValueDescanzo = value;
-                                    setState(() {});
-                                    ent.descanso.text = "$value $selectMinSecDescanzo";
-                                  },
-                                ),
-                                DropdownButton(
-                                  value: selectMinSecDescanzo,
-                                  items: minSec,
-                                  onChanged: (Object? value) {
-                                    selectMinSecDescanzo = "$value";
-                                    ent.descanso.text = "$_currentValueDescanzo $value";
-                                    setState(() {});
-                                  },
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            const Text("Intensidad",style: TextStyle(fontSize: 25)),
-                            Nivel(
-                                initialRating: rutina.rating.toDouble(),
-                                size: 50,
-                                isEnabled: false,
-                                onChanged: (rating) {
-                                  rutina.rating =
-                                      int.parse(rating.toString().substring(0, 1));
-                                  ent.asignarInt(rating.toString().substring(0, 1));
-                                  //rutina.onChangedRating(rating, index);
-                                }),
-                            const SizedBox(height: 20),
-                            const Text("Ejercicio Cardio Vascular",style: TextStyle(fontSize: 25),),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                NumberPicker(
-                                  value: _currentValueCardio,
-                                  minValue: 1,
-                                  maxValue: 60,
-                                  onChanged: (value){
-                                    _currentValueCardio = value;
-                                    setState(() {});
-                                    ent.ejercicio_cardio_vascular.text = "$value $selectMinSecCardio";
-                                  },
-                                ),
-                                DropdownButton(
-                                  value: selectMinSecCardio,
-                                  items: minSec,
-                                  onChanged: (Object? value) {
-                                    selectMinSecCardio = "$value";
-                                    ent.ejercicio_cardio_vascular.text = "$_currentValueCardio $value";
-                                    setState(() {});
-                                  },
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            const Text("Repeticiones en reserva",style: TextStyle(fontSize: 25),),
-                            Input(inputController: ent.repeticiones_en_reserva, texto: "Repeticiones en reserva"),
-                            const SizedBox(height: 20),
-                            const Text("Observaciones Importantes",style: TextStyle(fontSize: 25),),
-                            Input(inputController: ent.observaciones, texto: "Observaciones")
-                          ],
-                        ),
+                                : ent.step == 2
+                                    ? step3(ent, width, height)
+                                    : Column(
+                                        children: [
+                                          const Text(
+                                            "Datos Generales",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 30),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          const Text(
+                                            "Descanzo entre series",
+                                            style: TextStyle(fontSize: 25),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              NumberPicker(
+                                                value: _currentValueDescanzo,
+                                                minValue: 1,
+                                                maxValue: 60,
+                                                onChanged: (value) {
+                                                  _currentValueDescanzo = value;
+                                                  setState(() {});
+                                                  ent.descanso.text =
+                                                      "$value $selectMinSecDescanzo";
+                                                },
+                                              ),
+                                              DropdownButton(
+                                                value: selectMinSecDescanzo,
+                                                items: minSec,
+                                                onChanged: (Object? value) {
+                                                  selectMinSecDescanzo =
+                                                      "$value";
+                                                  ent.descanso.text =
+                                                      "$_currentValueDescanzo $value";
+                                                  setState(() {});
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                          const SizedBox(height: 20),
+                                          const Text("Intensidad",
+                                              style: TextStyle(fontSize: 25)),
+                                          Nivel(
+                                              initialRating:
+                                                  rutina.rating.toDouble(),
+                                              size: 50,
+                                              isEnabled: false,
+                                              onChanged: (rating) {
+                                                rutina.rating = int.parse(rating
+                                                    .toString()
+                                                    .substring(0, 1));
+                                                ent.asignarInt(rating
+                                                    .toString()
+                                                    .substring(0, 1));
+                                                //rutina.onChangedRating(rating, index);
+                                              }),
+                                          const SizedBox(height: 20),
+                                          const Text(
+                                            "Ejercicio Cardio Vascular",
+                                            style: TextStyle(fontSize: 25),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              NumberPicker(
+                                                value: _currentValueCardio,
+                                                minValue: 1,
+                                                maxValue: 60,
+                                                onChanged: (value) {
+                                                  _currentValueCardio = value;
+                                                  setState(() {});
+                                                  ent.ejercicio_cardio_vascular
+                                                          .text =
+                                                      "$value $selectMinSecCardio";
+                                                },
+                                              ),
+                                              DropdownButton(
+                                                value: selectMinSecCardio,
+                                                items: minSec,
+                                                onChanged: (Object? value) {
+                                                  selectMinSecCardio = "$value";
+                                                  ent.ejercicio_cardio_vascular
+                                                          .text =
+                                                      "$_currentValueCardio $value";
+                                                  setState(() {});
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                          const SizedBox(height: 20),
+                                          const Text(
+                                            "Repeticiones en reserva",
+                                            style: TextStyle(fontSize: 25),
+                                          ),
+                                          Input(
+                                              inputController:
+                                                  ent.repeticiones_en_reserva,
+                                              texto: "Repeticiones en reserva"),
+                                          const SizedBox(height: 20),
+                                          const Text(
+                                            "Observaciones Importantes",
+                                            style: TextStyle(fontSize: 25),
+                                          ),
+                                          Input(
+                                              inputController:
+                                                  ent.observaciones,
+                                              texto: "Observaciones")
+                                        ],
+                                      ),
                       ],
                     ),
                   ),
@@ -175,12 +212,13 @@ List<DropdownMenuItem<String>> minSec = [
                           boton(height, width, context, "Regresar", () {
                             ent.back();
                           }),
-                        ent.step <3?
-                        boton(height, width, context, "Siguiente", () {
-                          ent.next(context);
-                        }):boton(height, width, context, "Finalizar", () {
-                            ent.insertarEntrenamiento(context);
-                        }),
+                        ent.step < 3
+                            ? boton(height, width, context, "Siguiente", () {
+                                ent.next(context);
+                              })
+                            : boton(height, width, context, "Finalizar", () {
+                                ent.insertarEntrenamiento(context);
+                              }),
                       ],
                     ),
                   ),
@@ -193,47 +231,61 @@ List<DropdownMenuItem<String>> minSec = [
     );
   }
 
-  SingleChildScrollView step3(
-      provider_entrenamiento ent, width, height) {
+  SingleChildScrollView step3(provider_entrenamiento ent, width, height) {
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Column(
           children: [
-          Column(
-                  children: [
-                    ColumnBuilder(itemBuilder: (context, i) =>
-                        ent.dias[i].enable == true?
-                        Column(
-                          children: [
-                            Text(ent.dias[i].dia),
-                            ColumnBuilder(
-                                itemCount: ent.dias[i].series!.length,
-                                itemBuilder: (context, index) => Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text("${ent.dias[i].series![index].serie!}",style: TextStyle(fontSize:  25,fontWeight: FontWeight.bold)),
-                                      ColumnBuilder(
-                                          itemBuilder: (context, index2) {
-                                            return cardCategoria(
-                                                height,
-                                                width,
-                                                ent.dias[i].series![index].ejercicios![index2],
-                                                index,
-                                                index2,
-                                                ent.dias[i].series![index].serie!,ent,i);
-                                          },
-                                          itemCount: ent.dias[i].series![index].ejercicios!.length),
-                                    ],
-                                  ),
-                                )),
-                          ],
-                        ):Container()
-                        , itemCount: ent.dias.length)
-                   // boton(height, width, context, "Confirmar", () { })
-                  ],
-                )/*
+            Column(
+              children: [
+                ColumnBuilder(
+                    itemBuilder: (context, i) => ent.dias[i].enable == true
+                        ? Column(
+                            children: [
+                              Text(ent.dias[i].dia),
+                              ColumnBuilder(
+                                  itemCount: ent.dias[i].series!.length,
+                                  itemBuilder: (context, index) => Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                "${ent.dias[i].series![index].serie!}",
+                                                style: TextStyle(
+                                                    fontSize: 25,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            ColumnBuilder(
+                                                itemBuilder: (context, index2) {
+                                                  return cardCategoria(
+                                                      height,
+                                                      width,
+                                                      ent.dias[i].series![index]
+                                                          .ejercicios![index2],
+                                                      index,
+                                                      index2,
+                                                      ent.dias[i].series![index]
+                                                          .serie!,
+                                                      ent,
+                                                      i);
+                                                },
+                                                itemCount: ent
+                                                    .dias[i]
+                                                    .series![index]
+                                                    .ejercicios!
+                                                    .length),
+                                          ],
+                                        ),
+                                      )),
+                            ],
+                          )
+                        : Container(),
+                    itemCount: ent.dias.length)
+                // boton(height, width, context, "Confirmar", () { })
+              ],
+            ) /*
                 : Container(
                     child: const Center(
                         child: Text(
@@ -311,27 +363,34 @@ List<DropdownMenuItem<String>> minSec = [
                         items: dropdownItems,
                         onChanged: (Object? value) {
                           ent.onchange(i, value);
-                          switch(i){
+                          switch (i) {
                             case 0:
-                              ent.getEjerciciosRutina(int.parse(ent.selectLunes),i);
+                              ent.getEjerciciosRutina(
+                                  int.parse(ent.selectLunes), i);
                               break;
                             case 1:
-                              ent.getEjerciciosRutina(int.parse(ent.selectMartes),i);
+                              ent.getEjerciciosRutina(
+                                  int.parse(ent.selectMartes), i);
                               break;
                             case 2:
-                              ent.getEjerciciosRutina(int.parse(ent.selectMiercoles),i);
+                              ent.getEjerciciosRutina(
+                                  int.parse(ent.selectMiercoles), i);
                               break;
                             case 3:
-                              ent.getEjerciciosRutina(int.parse(ent.selectJueves),i);
+                              ent.getEjerciciosRutina(
+                                  int.parse(ent.selectJueves), i);
                               break;
                             case 4:
-                              ent.getEjerciciosRutina(int.parse(ent.selectViernes),i);
+                              ent.getEjerciciosRutina(
+                                  int.parse(ent.selectViernes), i);
                               break;
                             case 5:
-                              ent.getEjerciciosRutina(int.parse(ent.selectSabado),i);
+                              ent.getEjerciciosRutina(
+                                  int.parse(ent.selectSabado), i);
                               break;
                             case 6:
-                              ent.getEjerciciosRutina(int.parse(ent.selectDomingo),i);
+                              ent.getEjerciciosRutina(
+                                  int.parse(ent.selectDomingo), i);
                               break;
                           }
                         },
@@ -360,32 +419,6 @@ List<DropdownMenuItem<String>> minSec = [
             texto: "Nombre del entrenamiento"),
         const SizedBox(
           height: 10,
-        ),
-        const Text(
-          "Duracion",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ent.inicio.year == 1995
-                ? ElevatedButton(
-                    onPressed: () => ent.mostrarFechaInicio(context),
-                    child: const Text("Fecha Inicio"))
-                : Text(ent.formatter
-                    .format(DateTime.parse(ent.inicio.toString()))
-                    .toUpperCase()),
-            ent.fin.year == 1995
-                ? ElevatedButton(
-                    onPressed: () => ent.mostrarFechaFin(context),
-                    child: const Text("Fecha Fin"))
-                : Text(ent.formatter
-                    .format(DateTime.parse(ent.fin.toString()))
-                    .toUpperCase()),
-          ],
         ),
         const Divider(),
         const Text(
@@ -474,7 +507,7 @@ List<DropdownMenuItem<String>> minSec = [
   }
 
   Container cardCategoria(double height, double width, Ejercicio_Model eje,
-       index,index2,serie,provider_entrenamiento ent,dia) {
+      index, index2, serie, provider_entrenamiento ent, dia) {
     return Container(
         padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
         child: Stack(
@@ -492,13 +525,14 @@ List<DropdownMenuItem<String>> minSec = [
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Nombre: ${eje.nombre}"),
-                          Text("Musculos: ${eje.musculos_trabajados}"),
-                          Text("Instrucciones:"),
-                          Text("${eje.instrucciones}"),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("${eje.nombre}",style: TextStyle(fontWeight: FontWeight.bold),),
+                          ),
                         ],
                       ),
                     ),
+
                     Container(
                       width: width / 3.5,
                       padding: EdgeInsets.all(10),
@@ -507,14 +541,14 @@ List<DropdownMenuItem<String>> minSec = [
                         children: [
                           Text("Serie"),
                           Input3(
-                            texto: "",
+                            texto: "${ent.dias[dia].series![index].ejercicios![index2].series}",
                             proviene: 1,
                             isNumber: true,
                             dia: dia,
                             index: index,
                             index2: index2,
                             onChanged: (value) {
-                              ent.onchangeS(value, index,index2,dia);
+                              ent.onchangeS(value, index, index2, dia);
                             },
                           )
                         ],
@@ -528,14 +562,15 @@ List<DropdownMenuItem<String>> minSec = [
                         children: [
                           Text("Repeticion"),
                           Input3(
-                            texto: "",
+                            texto: "${ent.dias[dia].series![index].ejercicios![index2].repeticiones}",
                             proviene: 2,
                             dia: dia,
                             isNumber: true,
                             index: index,
                             index2: index2,
                             onChanged: (value) {
-                              ent.onchangeR(value, index: index,index2: index2,dia);
+                              ent.onchangeR(
+                                  value, index: index, index2: index2, dia);
                             },
                           )
                         ],
@@ -543,16 +578,23 @@ List<DropdownMenuItem<String>> minSec = [
                     ),
                   ],
                 )),
-
               ],
             )),
             Padding(
-              padding: const EdgeInsets.only(top: 10,left: 5),
-              child: Container(
-                width: 5,
-                  height: 80,
-                  color:serie == "Biserie"? Colors.red:serie == "Triserie"?Colors.blue:Colors.green              ),
-            )
+                padding: const EdgeInsets.only(top: 10, left: 5),
+                child: Container(
+                  width: 10,
+                  height: height / 10,
+                  color: serie == "Biserie"
+                      ? Colors.red
+                      : serie == "Triserie"
+                          ? Colors.blue
+                          : serie == "Circuito"
+                              ? Colors.yellow
+                              : serie == "Serie recta"
+                                  ? Colors.green
+                                  : Colors.black87,
+                ))
           ],
         ));
   }

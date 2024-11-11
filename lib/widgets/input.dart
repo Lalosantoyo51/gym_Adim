@@ -10,7 +10,8 @@ class Input extends StatefulWidget {
   final bool estado;
   final bool editable;
   final bool obscureText;
-  const Input({
+  bool isnumerico = false;
+   Input({
     super.key,
     required this.inputController,
     required this.texto,
@@ -21,6 +22,7 @@ class Input extends StatefulWidget {
     this.isBlack = true,
     this.editable = true,
     this.obscureText = false,
+    this.isnumerico = false
   });
 
   @override
@@ -45,16 +47,9 @@ class _Input extends State<Input> {
         Container(
           height: 50,
           width: widget.sizeInput,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                offset: const Offset(12, 26),
-                blurRadius: 50,
-                color: Colors.grey.withOpacity(.1),
-              ),
-            ],
-          ),
+
           child: TextField(
+            keyboardType:widget.isnumerico == true? TextInputType.number:TextInputType.text,
             obscureText: widget.obscureText,
             enabled: widget.editable,
             controller: widget.inputController,
@@ -68,35 +63,35 @@ class _Input extends State<Input> {
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!
-                    .copyWith(color: primaryColor),
+                    .copyWith(color: Colors.black),
               ),
               labelStyle: const TextStyle(color: primaryColor),
               // prefixIcon: Icon(Icons.email),
               filled: true,
               fillColor: accentColor,
-              hintStyle: TextStyle(color: Colors.grey.withOpacity(.75)),
+              hintStyle: TextStyle(color: Colors.black),
               contentPadding: const EdgeInsets.symmetric(horizontal: 25.0),
               border: const OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: primaryColor,
+                  color: Colors.black,
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(border)),
               ),
               focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: secondaryColor,
+                  color: Colors.black,
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(border)),
               ),
               errorBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: errorColor,
+                  color: Colors.black,
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(border)),
               ),
               enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: primaryColor,
+                  color: Colors.black,
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(border)),
               ),

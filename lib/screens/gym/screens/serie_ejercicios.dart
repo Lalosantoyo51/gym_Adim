@@ -68,7 +68,7 @@ class _Serie_EjerciciosState extends State<Serie_Ejercicios> {
                 right: 50,
                 child: InkWell(
                   onTap: () {
-                    rutina.insertRutina(widget.id_rutina,context);
+                    rutina.veririficar(widget.id_rutina,context);
                   },
                   child: Stack(
                     alignment: Alignment.center,

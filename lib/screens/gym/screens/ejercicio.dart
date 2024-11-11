@@ -159,10 +159,7 @@ class _EjercicioState extends State<Ejercicio> {
               child: Input(
                   inputController: cat_eje_provider.nombre,
                   texto: "Nombre del ejercicio")),
-          Center(
-              child: Input(
-                  inputController: cat_eje_provider.musculos_trabajados,
-                  texto: "Musculos trabajados")),
+
           Center(
               child: Input(
                   inputController: cat_eje_provider.instrucciones,
@@ -299,9 +296,8 @@ class _EjercicioState extends State<Ejercicio> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Nombre: ${eje.nombre}"),
-                  Text("Musculos: ${eje.musculos_trabajados}"),
-                  Text("Instrucciones:"),
+                  Text(eje.nombre!,style:const TextStyle(fontWeight: FontWeight.bold),),
+                  const Text("Instrucciones:"),
                   Text("${eje.instrucciones}"),
                 ],
               ),
@@ -334,21 +330,7 @@ class _EjercicioState extends State<Ejercicio> {
                                 color: Colors.orange,
                                 size: 25,
                               )),
-                          Switch(
-                              activeColor: Colors.black,
-                              value: eje.isActivo,
-                              onChanged: (value) {
-                                eje.isActivo = value;
-                                setState(() {
-                                  if (value == true) {
-                                    cat_eje_provider.isdisponible(
-                                        0, eje.id_ejercicio);
-                                  } else {
-                                    cat_eje_provider.isdisponible(
-                                        1, eje.id_ejercicio);
-                                  }
-                                });
-                              }),
+
                           IconButton(
                               onPressed: () {
                                 cat_eje_provider.advertencia(

@@ -12,36 +12,13 @@ class LoadingAlert extends StatefulWidget {
 class _LoadingAlertState extends State<LoadingAlert> {
   @override
   Widget build(BuildContext context) {
-    var sizeWidth = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
-    return AlertDialog(
-      content: Container(
-        width: sizeWidth/2,
-        height: height/20,
-        child: Column(
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-
-                Container(
-                  height: height/20,
-                  width: sizeWidth/15,
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.black,
-                  ),
-                ),
-                Container(
-                  child: Text(
-                    "    ${widget.messageAler}",
-                    style: TextStyle(),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                )
-              ],
-            ),
-          ],
+    return Center(
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            image: DecorationImage(image: AssetImage("assets/cargando.gif"),fit: BoxFit.fill,)
         ),
       ),
     );

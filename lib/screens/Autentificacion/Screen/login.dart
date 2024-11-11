@@ -29,7 +29,7 @@ class _LoginState extends State<Login> {
         width: width,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/HombreBienvenida3.png"),
+            image: AssetImage("assets/login.jpeg"),
             fit: BoxFit.cover,
           ),
         ),
@@ -65,8 +65,8 @@ class _LoginState extends State<Login> {
                   children: [
                     Positioned(
                       child: BottomGradiant(
-                        colorFinal: const Color.fromRGBO(238, 70, 61, 1),
-                        colorInicial: const Color.fromRGBO(255, 138, 95, 1),
+                        colorFinal: const Color.fromRGBO(0, 0, 0, 1),
+                        colorInicial: const Color.fromRGBO(0, 0, 0, 1),
                         width: width * .8,
                         heigth: height * .065,
                       ),
@@ -88,21 +88,6 @@ class _LoginState extends State<Login> {
                     color: Colors.white,
                   ),
             ),
-            Container(
-              margin: EdgeInsets.only(top: height * .02, bottom: height * .02),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "¿No tienes una cuenta? ",
-                    style: GoogleFonts.poppins(
-                      textStyle: Theme.of(context).textTheme.bodyMedium,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       ),

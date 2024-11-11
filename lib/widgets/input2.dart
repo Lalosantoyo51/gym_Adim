@@ -30,8 +30,8 @@ class _Input2 extends State<Input2> {
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Color.fromRGBO(255, 138, 95, 1);
-    const secondaryColor = Color.fromRGBO(255, 138, 95, 1);
+    const primaryColor = Color.fromRGBO(0, 0, 0, 1);
+    const secondaryColor = Color.fromRGBO(0, 0, 0, 1);
     const accentColor = Color(0xffffffff);
     const errorColor = Color(0xffEF4444);
     const double border = 15;

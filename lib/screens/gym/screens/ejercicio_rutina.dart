@@ -55,17 +55,34 @@ class _Ejercicio_RutinaState extends State<Ejercicio_Rutina> {
                 ? ListView.builder(
                     shrinkWrap: true,
                     itemCount: rutina.listSeries.length,
-                    itemBuilder: (context, index) => Column(
-                      children: [
-                        Text(rutina.listSeries[index].serie!),
-                        ColumnBuilder(
-                              itemCount:
-                                  rutina.listSeries[index].ejercicios!.length,
-                              itemBuilder: (context, index2) => Card(
-                                  child: buildPadding(width, index, index2, context,
-                                      height, rutina,rutina.listSeries[index].serie!)),
+                    itemBuilder: (context, index) => Card(
+                      child: Center(
+                        child: Column(
+                              children: [
+                                Text(rutina.listSeries[index].serie!),
+                                ColumnBuilder(
+                                  itemCount:
+                                      rutina.listSeries[index].ejercicios!.length,
+                                  itemBuilder: (context, index2) => GestureDetector(
+                                    onTap: (){
+                                      Get.to(Reproductor(
+                                          fieldid: rutina.listSeries[index]
+                                              .ejercicios![index2].fileid!));
+                                    },
+                                    child: Card(
+                                        child: buildPadding(
+                                            width,
+                                            index,
+                                            index2,
+                                            context,
+                                            height,
+                                            rutina,
+                                            rutina.listSeries[index].serie!)),
+                                  ),
+                                ),
+                              ],
                             ),
-                      ],
+                      ),
                     ))
                 : const Center(
                     child: Text("No hay registros",
@@ -75,99 +92,50 @@ class _Ejercicio_RutinaState extends State<Ejercicio_Rutina> {
   }
 
   Padding buildPadding(double width, int index, int index2,
-      BuildContext context, double height, provider_rutina rutina,serie) {
+      BuildContext context, double height, provider_rutina rutina, serie) {
     return Padding(
       padding: const EdgeInsets.only(top: 5, bottom: 5),
       child: Stack(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        rutina.listSeries[index].ejercicios![index2].nombre!,
-                        style: Theme.of(context).textTheme.headline5,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        child: Text(
+                          rutina.listSeries[index].ejercicios![index2].nombre!,
+                          style: Theme.of(context).textTheme.headline5,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      Text(
-                        "Series ${rutina.listSeries[index].ejercicios![index2].series}",
-                      ),
-                      Text(
-                        "Repeticiones ${rutina.listSeries[index].ejercicios![index2].repeticiones}",
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Nivel",
-                          ),
-                          SizedBox(
-                            width: 25,
-                          ),
-                          Nivel(
-                            onChanged: (value) {},
-                            isEnabled: false,
-                            initialRating: rutina
-                                .listSeries[index].ejercicios![index2].nivel!
-                                .toDouble(),
-                            size: width * .05,
-                          ),
-                        ],
-                      )
                     ],
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Acciones"),
-                      Row(
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                Get.to(Reproductor(
-                                    fieldid: rutina.listSeries[index]
-                                        .ejercicios![index2].fileid!));
-                              },
-                              icon: const Icon(
-                                Icons.video_library_rounded,
-                                color: Colors.green,
-                                size: 25,
-                              )),
-                          IconButton(
-                              onPressed: () {
-                                rutina
-                                    .eliminar_ejercicio_rutina(
-                                        rutina.listSeries[index].ejercicios![index2]
-                                            .id_rutina,
-                                        rutina
-                                            .ejercicios_rutina[index].id_ejercicio)
-                                    .then((value) => geteje());
-                              },
-                              icon: const Icon(
-                                Icons.cancel,
-                                color: Colors.red,
-                                size: 25,
-                              )),
-                        ],
-                      ),
-                    ],
-                  )
                 ],
               )
             ],
           ),
           Container(
             width: 10,
-            height: height/10,
-            color:serie == "Biserie"? Colors.red:serie == "Triserie"?Colors.blue:Colors.green,)
+            height: height / 10,
+            color: serie == "Biserie"
+                ? Colors.red
+                : serie == "Triserie"
+                    ? Colors.blue
+                    : serie == "Circuito"
+                        ? Colors.yellow
+                        : serie == "Serie recta"
+                            ? Colors.green
+                            : Colors.black87,
+          )
         ],
       ),
     );

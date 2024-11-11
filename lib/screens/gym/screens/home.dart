@@ -1,11 +1,16 @@
+import 'package:administrador/presentation/blocs/notifications/bloc.dart';
+import 'package:administrador/presentation/screens/home_screen.dart';
 import 'package:administrador/screens/Autentificacion/Model/user_model.dart';
 import 'package:administrador/screens/Autentificacion/Screen/login.dart';
 import 'package:administrador/screens/gym/providers/provider_categorias.dart';
 import 'package:administrador/screens/gym/providers/provider_ejercicios.dart';
+import 'package:administrador/screens/gym/providers/provider_nutricion.dart';
 import 'package:administrador/screens/gym/providers/provider_rutina.dart';
 import 'package:administrador/screens/gym/screens/categoria_ejercicio.dart';
-import 'package:administrador/screens/gym/screens/create_entrenamiento.dart';
 import 'package:administrador/screens/gym/screens/entrenamientos.dart';
+import 'package:administrador/screens/gym/screens/novedades/form_novedades.dart';
+import 'package:administrador/screens/gym/screens/novedades/historial.dart';
+import 'package:administrador/screens/gym/screens/nutricion/usuarios.dart';
 import 'package:administrador/screens/gym/screens/recepcion/generar_qr.dart';
 import 'package:administrador/screens/gym/screens/retos/retosP.dart';
 import 'package:administrador/screens/gym/screens/rutina.dart';
@@ -23,6 +28,7 @@ class HomeAdmin extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    final blocNoti = context.watch<NotificationsBloc>().state.notifications;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -41,12 +47,39 @@ class HomeAdmin extends StatelessWidget {
             menu(context, width, height),
             Container(
               width: width / 2,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Stack(
                 children: [
-                  const Text("Bienvenido", style: TextStyle(fontSize: 30)),
-                  Text("${user.nombre} ${user.apellidos} ",
-                      style: TextStyle(fontSize: 30)),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Bienvenido", style: TextStyle(fontSize: 30)),
+                        Text("${user.nombre} ${user.apellidos} ",
+                            style: TextStyle(fontSize: 30)),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    right: 10,
+                    top: 5,
+                    child: Stack(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              Get.to(HomeScreen());
+                            },
+                            icon: const Icon(
+                              size: 50,
+                              Icons.notifications,
+                              color: Colors.black,
+                            )),
+                        if(blocNoti.isNotEmpty)
+                          CircleAvatar(
+                            minRadius: 10,
+                            child: Text("${blocNoti.length}"), backgroundColor: Colors.red,)
+                      ],
+                    ),
+                  ),
                 ],
               ),
             )
@@ -61,10 +94,10 @@ class HomeAdmin extends StatelessWidget {
       width: width / 2,
       height: height,
       color: Colors.black,
-      child: Column(
+      child: ListView(
         children: [
           CircleAvatar(
-            radius: width * .15,
+            radius: width * .10,
             child: ClipOval(
                 child: Image.asset(
               'assets/HombreCaraPerfil.png',
@@ -88,7 +121,7 @@ class HomeAdmin extends StatelessWidget {
                     provine: "home",
                     entrenamientos: [],
                   ))),
-          options(width, "Categoria Ejercicio", () {
+          options(width, "Grupos Musculares", () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (BuildContext context) => MultiProvider(
                 providers: [
@@ -155,6 +188,33 @@ class HomeAdmin extends StatelessWidget {
                       create: (_) => provider_rutina()),
                 ],
                 builder: (context, child) => Genererar_QR(),
+              ),
+            ));
+          }),
+          const SizedBox(
+            height: 5,
+          ),
+          options(width, "Nutricion", () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => MultiProvider(
+                providers: [
+                  ChangeNotifierProvider<provider_nutricion>(
+                      create: (_) => provider_nutricion()),
+                ],
+                builder: (context, child) => UsuarioNu(),
+              ),
+            ));
+          }),
+          const SizedBox(
+            height: 5,
+          ),    options(width, "Novedades", () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => MultiProvider(
+                providers: [
+                  ChangeNotifierProvider<provider_nutricion>(
+                      create: (_) => provider_nutricion()),
+                ],
+                builder: (context, child) => HistorialNovedades(),
               ),
             ));
           }),
